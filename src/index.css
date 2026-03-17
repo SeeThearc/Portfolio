@@ -15,14 +15,14 @@
   --accent-subtle:   rgba(0, 255, 136, 0.08);
   --accent-border:   rgba(0, 255, 136, 0.25);
 
-  --blob-1-color: #003d1a;
-  --blob-2-color: #002e12;
-  --blob-3-color: #004d22;
+  --blob-1-color: #004d22;
+  --blob-2-color: #003615;
+  --blob-3-color: #00602a;
 
-  --wallpaper-a: #003d1aaa;
-  --wallpaper-b: #002e1288;
-  --wallpaper-c: #020e06;
-  --wallpaper-d: #010809;
+  --wallpaper-a: #004d22cc;
+  --wallpaper-b: #003615aa;
+  --wallpaper-c: #011408;
+  --wallpaper-d: #000c04;
 
   --notif-bg:    rgba(0, 40, 15, 0.82);
   --notif-icon-1:#00ff88;
@@ -30,14 +30,14 @@
 
   --app-window-bg:  #080f09;
   --app-sidebar-bg: #040b05;
-  --app-border:     rgba(0, 255, 136, 0.07);
-  --app-item-hover: rgba(0, 255, 136, 0.06);
+  --app-border:     rgba(0, 255, 136, 0.12);
+  --app-item-hover: rgba(0, 255, 136, 0.08);
   --app-active-bg:  rgba(0, 255, 136, 0.15);
   --app-active-col: #00ff88;
   --card-bg:        #0a160b;
-  --text-primary:   #e8fff2;
-  --text-secondary: rgba(200, 255, 225, 0.55);
-  --text-muted:     rgba(200, 255, 225, 0.3);
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(220, 255, 235, 0.85);
+  --text-muted:     rgba(220, 255, 235, 0.6);
 
   --dock-bg:  rgba(0, 255, 136, 0.09);
   --dock-bdr: rgba(0, 255, 136, 0.18);
@@ -81,14 +81,14 @@
 
   --app-window-bg:  #141920;
   --app-sidebar-bg: #0e1117;
-  --app-border:     rgba(255, 255, 255, 0.06);
-  --app-item-hover: rgba(255, 255, 255, 0.06);
+  --app-border:     rgba(255, 255, 255, 0.1);
+  --app-item-hover: rgba(255, 255, 255, 0.08);
   --app-active-bg:  rgba(59, 130, 246, 0.2);
   --app-active-col: #3b82f6;
   --card-bg:        #1a2030;
-  --text-primary:   #f0f0ff;
-  --text-secondary: rgba(240, 240, 255, 0.55);
-  --text-muted:     rgba(240, 240, 255, 0.3);
+  --text-primary:   #ffffff;
+  --text-secondary: rgba(240, 240, 255, 0.85);
+  --text-muted:     rgba(240, 240, 255, 0.6);
 
   --dock-bg:  rgba(255, 255, 255, 0.14);
   --dock-bdr: rgba(255, 255, 255, 0.20);

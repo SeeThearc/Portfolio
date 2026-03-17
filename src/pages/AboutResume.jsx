@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import './AboutResume.css'
 
@@ -12,10 +12,56 @@ const TABS = ['Profile', 'Experience', 'Education', 'Skills', 'Certifications']
 export default function AboutResume() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const initialTab = searchParams.get('tab') || 'Profile'
-  const [tab, setTab] = useState(TABS.includes(initialTab) ? initialTab : 'Profile')
+  const [activeSegment, setActiveSegment] = useState('Profile')
+
+  const contentRef = useRef(null)
+  const sectionRefs = useRef({})
+
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
+
+  // On mount or query param change, scroll to section
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && sectionRefs.current[tabParam]) {
+      // Use setTimeout to ensure DOM has settled, then snap instantly
+      setTimeout(() => {
+        sectionRefs.current[tabParam].scrollIntoView({ behavior: 'instant', block: 'start' })
+      }, 50)
+    }
+  }, [searchParams])
+
+  // Scroll spy to update active sidebar tab
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return
+      
+      const scrollPos = contentRef.current.scrollTop + 100 // offset for early trigger
+      let currentActive = 'Profile'
+
+      for (const section of TABS) {
+        const el = sectionRefs.current[section]
+        if (el && el.offsetTop <= scrollPos) {
+          currentActive = section
+        }
+      }
+      setActiveSegment(currentActive)
+    }
+
+    const container = contentRef.current
+    if (container) {
+      container.addEventListener('scroll', handleScroll, { passive: true })
+      // trigger once on mount
+      handleScroll()
+    }
+    return () => container?.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  function scrollToSection(section) {
+    if (sectionRefs.current[section]) {
+      sectionRefs.current[section].scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
     <div className="ipad-frame about-root">
@@ -48,7 +94,13 @@ export default function AboutResume() {
 
           <nav className="about-nav">
             {TABS.map(t => (
-              <button key={t} className={`about-nav-btn ${tab === t ? 'about-nav-active' : ''}`} onClick={() => setTab(t)}>{t}</button>
+              <button
+                key={t}
+                className={`about-nav-btn ${activeSegment === t ? 'about-nav-active' : ''}`}
+                onClick={() => scrollToSection(t)}
+              >
+                {t}
+              </button>
             ))}
           </nav>
 
@@ -59,10 +111,12 @@ export default function AboutResume() {
           </div>
         </aside>
 
-        {/* Content */}
-        <main className="about-content">
-          {tab === 'Profile' && (
-            <div className="content-pane">
+        {/* Scrolling Content Area */}
+        <main className="about-content" ref={contentRef}>
+          <div className="about-scroll-container">
+            
+            {/* ── Profile Section ── */}
+            <div className="content-pane" ref={el => sectionRefs.current['Profile'] = el} id="Profile">
               <h2 className="content-title">Professional Summary</h2>
               <p className="content-para">Enthusiastic Developer with a strong foundation in Data Structures, Algorithms, and full-stack web development. Proficient in C/C++, Python, HTML, CSS, JavaScript, and React. Skilled in building scalable and responsive applications, team collaboration, and problem-solving. Currently exploring blockchain, machine learning, and distributed systems.</p>
               <div className="stat-row">
@@ -74,14 +128,15 @@ export default function AboutResume() {
                 ))}
               </div>
             </div>
-          )}
 
-          {tab === 'Experience' && (
-            <div className="content-pane">
+            <div className="pane-divider" />
+
+            {/* ── Experience Section ── */}
+            <div className="content-pane" ref={el => sectionRefs.current['Experience'] = el} id="Experience">
               <h2 className="content-title">Experience</h2>
               {[
-                { role:'Operations Lead', org:'AI Club — VIT Chennai', period:'Mar 2024–Present', color:'#3b82f6', points:['Leading operations and managing project workflows','Coordinated a 24-hour offline hackathon as OC member'] },
-                { role:'Technical Team Member', org:'Game Dev Club — VIT Chennai', period:'Jul 2024–Jun 2025', color:'#8b5cf6', points:['Improved reusable frontend components, reducing dev time by 40%','Organized and managed offline gaming events'] },
+                { role:'Operations Lead', org:'AI Club — VIT Chennai', period:'Mar 2024–Present', color:'var(--accent)', points:['Leading operations and managing project workflows','Coordinated a 24-hour offline hackathon as OC member'] },
+                { role:'Technical Team Member', org:'Game Dev Club — VIT Chennai', period:'Jul 2024–Jun 2025', color:'var(--accent-2)', points:['Improved reusable frontend components, reducing dev time by 40%','Organized and managed offline gaming events'] },
               ].map((e,i) => (
                 <div key={i} className="exp-card" style={{'--ec':e.color}}>
                   <div className="exp-dot"/>
@@ -93,30 +148,34 @@ export default function AboutResume() {
                 </div>
               ))}
             </div>
-          )}
 
-          {tab === 'Education' && (
-            <div className="content-pane">
+            <div className="pane-divider" />
+
+            {/* ── Education Section ── */}
+            <div className="content-pane" ref={el => sectionRefs.current['Education'] = el} id="Education">
               <h2 className="content-title">Education</h2>
               {[
                 { degree:'B.Tech – Computer Science Engineering', school:'Vellore Institute of Technology, Chennai', year:'Expected July 2027', badge:'CGPA: 9.25/10', icon:'🎓' },
                 { degree:'Higher Secondary (12th)', school:'Sacred Heart Public Sr. Sec. School, Kota', year:'March 2023', badge:'84%', icon:'🏫' },
               ].map((e,i) => (
                 <div key={i} className="edu-card">
-                  <div className="edu-icon">{e.icon}</div>
-                  <div>
-                    <h3 className="edu-degree">{e.degree}</h3>
-                    <p className="edu-school">{e.school}</p>
-                    <p className="edu-year">{e.year}</p>
-                    <span className="edu-badge">{e.badge}</span>
+                  <div className="edu-card-left">
+                    <div className="edu-icon">{e.icon}</div>
+                    <div className="edu-details">
+                      <h3 className="edu-degree">{e.degree}</h3>
+                      <p className="edu-school">{e.school}</p>
+                      <p className="edu-year">{e.year}</p>
+                    </div>
                   </div>
+                  <span className="edu-badge">{e.badge}</span>
                 </div>
               ))}
             </div>
-          )}
 
-          {tab === 'Skills' && (
-            <div className="content-pane">
+            <div className="pane-divider" />
+
+            {/* ── Skills Section ── */}
+            <div className="content-pane" ref={el => sectionRefs.current['Skills'] = el} id="Skills">
               <h2 className="content-title">Skills</h2>
               {Object.entries(SKILLS).map(([cat, items]) => (
                 <div key={cat} className="skill-group">
@@ -125,14 +184,15 @@ export default function AboutResume() {
                 </div>
               ))}
             </div>
-          )}
 
-          {tab === 'Certifications' && (
-            <div className="content-pane">
+            <div className="pane-divider" />
+
+            {/* ── Certifications Section ── */}
+            <div className="content-pane" ref={el => sectionRefs.current['Certifications'] = el} id="Certifications">
               <h2 className="content-title">Certifications</h2>
               {[
-                { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'#06b6d4' },
-                { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'#6366f1' },
+                { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'var(--accent)' },
+                { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'var(--accent-2)' },
               ].map((c,i) => (
                 <div key={i} className="cert-card">
                   <div className="cert-icon" style={{background:`${c.color}20`,border:`1px solid ${c.color}35`}}>{c.icon}</div>
@@ -141,11 +201,12 @@ export default function AboutResume() {
                 </div>
               ))}
             </div>
-          )}
+            
+            {/* Bottom spacer so the last section can be scrolled to the top */}
+            <div style={{ height: '40vh' }} />
+          </div>
         </main>
       </div>
-
-
     </div>
   )
 }
