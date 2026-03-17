@@ -1,0 +1,215 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ═══════════════════════════════════════════════════
+   THEME: GREEN (Matrix) — DEFAULT
+   ═══════════════════════════════════════════════════ */
+:root,
+[data-theme="green"] {
+  --bg-primary:      #020e06;
+  --bg-secondary:    #041208;
+
+  --accent:          #00ff88;
+  --accent-2:        #00cc66;
+  --accent-3:        #39ff14;
+  --accent-glow:     rgba(0, 255, 136, 0.25);
+  --accent-subtle:   rgba(0, 255, 136, 0.08);
+  --accent-border:   rgba(0, 255, 136, 0.25);
+
+  --blob-1-color: #003d1a;
+  --blob-2-color: #002e12;
+  --blob-3-color: #004d22;
+
+  --wallpaper-a: #003d1aaa;
+  --wallpaper-b: #002e1288;
+  --wallpaper-c: #020e06;
+  --wallpaper-d: #010809;
+
+  --notif-bg:    rgba(0, 40, 15, 0.82);
+  --notif-icon-1:#00ff88;
+  --notif-icon-2:#00cc66;
+
+  --app-window-bg:  #080f09;
+  --app-sidebar-bg: #040b05;
+  --app-border:     rgba(0, 255, 136, 0.07);
+  --app-item-hover: rgba(0, 255, 136, 0.06);
+  --app-active-bg:  rgba(0, 255, 136, 0.15);
+  --app-active-col: #00ff88;
+  --card-bg:        #0a160b;
+  --text-primary:   #e8fff2;
+  --text-secondary: rgba(200, 255, 225, 0.55);
+  --text-muted:     rgba(200, 255, 225, 0.3);
+
+  --dock-bg:  rgba(0, 255, 136, 0.09);
+  --dock-bdr: rgba(0, 255, 136, 0.18);
+
+  --status-bg: rgba(2, 14, 6, 0.6);
+  --badge-bg:  rgba(0, 255, 136, 0.12);
+  --badge-bdr: rgba(0, 255, 136, 0.22);
+  --badge-txt: rgba(0, 255, 136, 0.65);
+
+  --switcher-bg: rgba(3, 12, 5, 0.97);
+  --gradient-text-a: #00ff88;
+  --gradient-text-b: #39ff14;
+}
+
+/* ═══════════════════════════════════════════════════
+   THEME: BLUE (Ocean)
+   ═══════════════════════════════════════════════════ */
+[data-theme="blue"] {
+  --bg-primary:      #0a1628;
+  --bg-secondary:    #0d1f3c;
+
+  --accent:          #6366f1;
+  --accent-2:        #8b5cf6;
+  --accent-3:        #06b6d4;
+  --accent-glow:     rgba(99, 102, 241, 0.25);
+  --accent-subtle:   rgba(99, 102, 241, 0.08);
+  --accent-border:   rgba(99, 102, 241, 0.25);
+
+  --blob-1-color: #1a3a7a;
+  --blob-2-color: #0f2855;
+  --blob-3-color: #1a4060;
+
+  --wallpaper-a: #1a3a7aaa;
+  --wallpaper-b: #0f285588;
+  --wallpaper-c: #0a1628;
+  --wallpaper-d: #060d1e;
+
+  --notif-bg:    rgba(20, 35, 70, 0.82);
+  --notif-icon-1:#2563eb;
+  --notif-icon-2:#0d9488;
+
+  --app-window-bg:  #141920;
+  --app-sidebar-bg: #0e1117;
+  --app-border:     rgba(255, 255, 255, 0.06);
+  --app-item-hover: rgba(255, 255, 255, 0.06);
+  --app-active-bg:  rgba(59, 130, 246, 0.2);
+  --app-active-col: #3b82f6;
+  --card-bg:        #1a2030;
+  --text-primary:   #f0f0ff;
+  --text-secondary: rgba(240, 240, 255, 0.55);
+  --text-muted:     rgba(240, 240, 255, 0.3);
+
+  --dock-bg:  rgba(255, 255, 255, 0.14);
+  --dock-bdr: rgba(255, 255, 255, 0.20);
+
+  --status-bg: rgba(10, 22, 40, 0.6);
+  --badge-bg:  rgba(255, 255, 255, 0.12);
+  --badge-bdr: rgba(255, 255, 255, 0.18);
+  --badge-txt: rgba(255, 255, 255, 0.75);
+
+  --switcher-bg: rgba(5, 10, 25, 0.97);
+  --gradient-text-a: #6366f1;
+  --gradient-text-b: #06b6d4;
+}
+
+/* ═══════════════════════════════════════════════════
+   BASE RESETS
+   ═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { height: 100%; width: 100%; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  transition: background 0.5s ease, color 0.5s ease;
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+
+/* ── iPad frame ─────────────────────────────────── */
+.ipad-frame {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-primary);
+  transition: background 0.5s ease;
+}
+
+/* ── Wallpaper ──────────────────────────────────── */
+.ipad-wallpaper {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, var(--wallpaper-a) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, var(--wallpaper-b) 0%, transparent 60%),
+    linear-gradient(160deg, var(--wallpaper-c) 0%, var(--wallpaper-d) 100%);
+  z-index: 0;
+  transition: background 0.5s ease;
+}
+
+/* ── Status Bar ─────────────────────────────────── */
+.status-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  z-index: 100;
+  background: var(--status-bg);
+}
+.status-time {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.01em;
+}
+.status-icons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255,255,255,0.9);
+}
+.status-battery {
+  width: 24px; height: 11px;
+  border: 1.5px solid rgba(255,255,255,0.8);
+  border-radius: 3px;
+  position: relative;
+  padding: 1.5px;
+  display: flex;
+  align-items: center;
+}
+.status-battery-fill {
+  width: 80%; height: 100%;
+  background: white;
+  border-radius: 1px;
+}
+.status-battery-tip {
+  position: absolute;
+  right: -5px; top: 50%;
+  transform: translateY(-50%);
+  width: 3px; height: 5px;
+  background: rgba(255,255,255,0.8);
+  border-radius: 0 1px 1px 0;
+}
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes fadeUp   { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+@keyframes scaleIn  { from{transform:scale(1.08);opacity:0} to{transform:scale(1);opacity:1} }
+@keyframes float    { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+@keyframes pulseGlow{ 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+.anim-fadeup  { animation: fadeUp  0.5s ease both; }
+.anim-fadein  { animation: fadeIn  0.5s ease both; }
+.anim-slidein { animation: scaleIn 0.4s ease both; }
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
+.delay-6 { animation-delay: 0.48s; }
+
+/* ── Scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
