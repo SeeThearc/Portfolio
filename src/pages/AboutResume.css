@@ -14,13 +14,13 @@
 
 /* Sidebar */
 .about-sidebar {
-  width: 200px;
+  width: 280px;
   flex-shrink: 0;
   background: var(--app-sidebar-bg);
   border-right: 1px solid var(--app-border);
   display: flex;
   flex-direction: column;
-  padding: 16px 0;
+  padding: 20px 0;
   gap: 0;
   overflow-y: auto;
 }
@@ -28,13 +28,13 @@
 .about-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 14px 14px;
+  gap: 12px;
+  padding: 0 16px 18px;
   border-bottom: 1px solid var(--app-border);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 .about-back-btn {
-  width: 28px; height: 28px;
+  width: 32px; height: 32px;
   border-radius: 8px;
   background: var(--app-item-hover);
   display: flex;
@@ -43,31 +43,33 @@
   flex-shrink: 0;
   transition: background 0.2s;
 }
-.about-back-btn:hover { background: rgba(255,255,255,0.15); }
-.about-logo-text { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+.about-back-btn:hover { background: rgba(255,255,255,0.2); }
+.about-logo-text { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
 
 .about-profile-block {
   text-align: center;
-  padding: 0 14px 16px;
+  padding: 0 20px 24px;
   border-bottom: 1px solid var(--app-border);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 .about-avatar {
-  width: 56px; height: 56px;
+  width: 110px; height: 110px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  background: var(--app-item-hover);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #fff;
-  margin: 0 auto 10px;
-  box-shadow: 0 0 20px var(--accent-glow);
+  margin: 0 auto 16px;
+  box-shadow: 0 0 30px var(--accent-glow);
+  overflow: hidden;
+  border: 3px solid var(--accent-border);
 }
-.about-name { font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
-.about-role-text { font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 2px; }
-.about-uni { font-size: 0.65rem; color: var(--text-muted); }
+.about-avatar img {
+  width: 100%; height: 100%; object-fit: cover;
+}
+.about-name { font-size: 1.7rem; font-weight: 800; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.01em; }
+.about-role-text { font-size: 0.9rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 4px; }
+.about-uni { font-size: 0.8rem; color: var(--text-muted); }
 
 .about-nav { display: flex; flex-direction: column; gap: 2px; padding: 0 8px; flex: 1; }
 .about-nav-btn {
@@ -201,7 +203,15 @@
 .skill-group { display: flex; flex-direction: column; gap: 8px; }
 .skill-cat { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
 .skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.skill-chip { font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; background: var(--badge-bg); border: 1px solid var(--badge-bdr); color: var(--badge-txt); }
+.skill-chip { 
+  font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; 
+  background: var(--badge-bg); border: 1px solid var(--badge-bdr); color: var(--badge-txt);
+  transition: all 0.2s ease; cursor: default;
+}
+.skill-chip:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #fff;
+}
 
 /* Certifications */
 .cert-card {
@@ -212,11 +222,23 @@
   background: var(--app-item-hover);
   border: 1px solid var(--app-border);
   border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.cert-card:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+.cert-card:hover .cert-title,
+.cert-card:hover .cert-issuer,
+.cert-card:hover .cert-date {
+  color: #fff;
 }
 .cert-icon { width: 46px; height: 46px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
-.cert-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
-.cert-issuer { font-size: 0.85rem; color: var(--text-secondary); }
-.cert-date { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; }
+.cert-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; transition: color 0.2s ease; }
+.cert-issuer { font-size: 0.85rem; color: var(--text-secondary); transition: color 0.2s ease; }
+.cert-date { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; transition: color 0.2s ease; }
 
 /* Status battery */
 .status-battery { width: 24px; height: 11px; border: 1.5px solid rgba(255,255,255,0.8); border-radius: 3px; position: relative; padding: 1.5px; display: flex; align-items: center; }

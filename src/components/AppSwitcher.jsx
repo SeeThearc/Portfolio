@@ -37,11 +37,11 @@ function LockPreview() {
       <div className="prev-lock-time">14:37</div>
       <div className="prev-lock-date">Tuesday, March 17</div>
       <div className="prev-notif">
-        <div className="prev-notif-icon" style={{ background: '#2563eb' }} />
+        <div className="prev-notif-icon" style={{ background: 'var(--accent)' }} />
         <div className="prev-notif-text">New Connection</div>
       </div>
       <div className="prev-notif">
-        <div className="prev-notif-icon" style={{ background: '#0d9488' }} />
+        <div className="prev-notif-icon" style={{ background: 'var(--accent-2)' }} />
         <div className="prev-notif-text">Design Update</div>
       </div>
     </div>
@@ -49,7 +49,7 @@ function LockPreview() {
 }
 
 function HomePreview() {
-  const ICON_COLORS = ['#2563eb','#374151','#059669','#d97706','#7c3aed','#be185d']
+  const ICON_COLORS = ['var(--accent)','#374151','var(--accent-2)','#d97706','#7c3aed','#be185d']
   return (
     <div className="preview-home">
       <div className="prev-home-icons">

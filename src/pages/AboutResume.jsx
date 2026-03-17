@@ -86,7 +86,9 @@ export default function AboutResume() {
           </div>
 
           <div className="about-profile-block">
-            <div className="about-avatar">AA</div>
+            <div className="about-avatar">
+              <img src="/avatar.png" alt="Ayush Agrawal" />
+            </div>
             <h3 className="about-name">Ayush Agrawal</h3>
             <p className="about-role-text">Full-Stack Dev</p>
             <p className="about-uni">VIT Chennai · CSE</p>
@@ -191,14 +193,14 @@ export default function AboutResume() {
             <div className="content-pane" ref={el => sectionRefs.current['Certifications'] = el} id="Certifications">
               <h2 className="content-title">Certifications</h2>
               {[
-                { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'var(--accent)' },
-                { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'var(--accent-2)' },
+                { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'var(--accent)', link: 'https://courses.vit.skillsnetwork.site/certificates/fd35bd85aa0f4e45bb2ce49543b69ef9' },
+                { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'var(--accent-2)', link: 'https://www.udemy.com/certificate/UC-6d956b8e-7042-4c91-8381-c089758d1111/' },
               ].map((c,i) => (
-                <div key={i} className="cert-card">
+                <a key={i} className="cert-card" href={c.link} target="_blank" rel="noreferrer">
                   <div className="cert-icon" style={{background:`${c.color}20`,border:`1px solid ${c.color}35`}}>{c.icon}</div>
                   <div className="cert-info"><h3 className="cert-title">{c.title}</h3><p className="cert-issuer">{c.issuer}</p></div>
                   <span className="cert-date">{c.date}</span>
-                </div>
+                </a>
               ))}
             </div>
             
