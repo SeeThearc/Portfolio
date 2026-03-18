@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AudioToggle from '../components/AudioToggle'
 import './LockScreen.css'
 
 export default function LockScreen() {
@@ -50,6 +51,8 @@ export default function LockScreen() {
           <div className="battery-fill" />
         </div>
       </div>
+
+      <AudioToggle className="floating-audio-lock" />
 
       {/* Center content */}
       <div className="lock-center">

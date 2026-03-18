@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTheme, THEMES } from '../context/ThemeContext'
+import AudioToggle from '../components/AudioToggle'
 import './HomeScreen.css'
 
 const APP_ICONS = [
@@ -91,6 +92,8 @@ export default function HomeScreen() {
           <div className="status-battery"><div className="status-battery-fill"/><div className="status-battery-tip"/></div>
         </div>
       </div>
+
+      <AudioToggle className="floating-audio-home" />
 
       {/* App Grid */}
       <div className="app-grid-wrapper">
