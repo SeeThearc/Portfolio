@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import './AboutResume.css'
 
@@ -20,14 +20,12 @@ export default function AboutResume() {
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
 
-  // On mount or query param change, scroll to section
-  useEffect(() => {
+  // On mount or query param change, scroll to section instantaneously before paint
+  useLayoutEffect(() => {
     const tabParam = searchParams.get('tab')
-    if (tabParam && sectionRefs.current[tabParam]) {
-      // Use setTimeout to ensure DOM has settled, then snap instantly
-      setTimeout(() => {
-        sectionRefs.current[tabParam].scrollIntoView({ behavior: 'instant', block: 'start' })
-      }, 50)
+    if (tabParam && sectionRefs.current[tabParam] && contentRef.current) {
+      const topPos = sectionRefs.current[tabParam].offsetTop - 32
+      contentRef.current.scrollTo({ top: topPos, behavior: 'auto' })
     }
   }, [searchParams])
 
@@ -58,8 +56,9 @@ export default function AboutResume() {
   }, [])
 
   function scrollToSection(section) {
-    if (sectionRefs.current[section]) {
-      sectionRefs.current[section].scrollIntoView({ behavior: 'smooth' })
+    if (sectionRefs.current[section] && contentRef.current) {
+      const topPos = sectionRefs.current[section].offsetTop - 32
+      contentRef.current.scrollTo({ top: topPos, behavior: 'smooth' })
     }
   }
 

@@ -143,7 +143,7 @@ export default function ProjectGallery() {
             </div>
             <div>
               <p className="sidebar-username">Ayush Agrawal</p>
-              <p className="sidebar-userrole">Pro Account</p>
+              <p className="sidebar-userrole">@SeeThearc</p>
             </div>
             <button className="sidebar-settings">⚙</button>
           </div>
@@ -173,14 +173,14 @@ export default function ProjectGallery() {
               <div
                 key={proj.id}
                 className="gallery-card"
-                style={{ borderTop: `3px solid ${proj.typeColor}`, '--card-bg': proj.bgColor, animationDelay: `${i * 0.07 + 0.1}s` }}
+                style={{ '--card-bg': proj.bgColor, animationDelay: `${i * 0.07 + 0.1}s` }}
               >
+                <div className="card-thumb" style={{ background: proj.bgColor }}>
+                  <span className="card-emoji">{proj.thumbnail}</span>
+                </div>
                 <div className="card-info">
                   <div className="card-title-row">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span className="card-emoji" style={{ fontSize: '1.3rem', lineHeight: 1 }}>{proj.thumbnail}</span>
-                      <h3 className="card-title">{proj.title}</h3>
-                    </div>
+                    <h3 className="card-title">{proj.title}</h3>
                     <span className="card-type" style={{ background: `${proj.typeColor}25`, color: proj.typeColor }}>{proj.type}</span>
                   </div>
                   <p className="card-desc">{proj.desc}</p>
