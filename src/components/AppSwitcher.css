@@ -83,6 +83,13 @@
   padding-bottom: 4px;
   scrollbar-width: none;
 }
+
+@media (max-width: 950px) {
+  .switcher-cards {
+    justify-content: flex-start;
+    padding: 0 24px;
+  }
+}
 .switcher-cards::-webkit-scrollbar { display: none; }
 
 .switcher-card {

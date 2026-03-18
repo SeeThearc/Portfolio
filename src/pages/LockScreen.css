@@ -108,6 +108,14 @@
   margin-right: -0.6em;
 }
 
+@media (max-width: 600px) {
+  .lock-watermark span {
+    font-size: clamp(1.2rem, 8vw, 2.25rem);
+    letter-spacing: 0.3em;
+    margin-right: -0.3em;
+  }
+}
+
 /* Notification cards */
 .lock-notifs {
   display: flex;
