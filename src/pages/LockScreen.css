@@ -84,7 +84,28 @@
   font-size: clamp(0.85rem, 2vw, 1.1rem);
   font-weight: 400;
   color: rgba(255,255,255,0.85);
-  margin-bottom: 48px;
+  margin-bottom: 16px;
+}
+
+/* Watermark */
+.lock-watermark {
+  z-index: 0;
+  pointer-events: none;
+  margin-top: 16px;
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.lock-watermark span {
+  font-size: clamp(2.25rem, 6vw, 3.75rem);
+  font-weight: 700;
+  letter-spacing: 0.6em;
+  text-transform: uppercase;
+  user-select: none;
+  white-space: nowrap;
+  color: white;
+  margin-right: -0.6em;
 }
 
 /* Notification cards */

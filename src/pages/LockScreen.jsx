@@ -63,6 +63,11 @@ export default function LockScreen() {
         <div className="lock-time anim-fadeup delay-1">{hh}:{mm}</div>
         <div className="lock-date anim-fadeup delay-2">{dateStr}</div>
 
+        {/* Watermark */}
+        <div className="lock-watermark anim-fadeup delay-2">
+          <span>SeeThearc.</span>
+        </div>
+
         {/* Notifications */}
         <div className="lock-notifs anim-fadeup delay-3">
           <div className="lock-notif">
