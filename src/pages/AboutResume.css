@@ -248,3 +248,56 @@
 .status-battery { width: 24px; height: 11px; border: 1.5px solid rgba(255,255,255,0.8); border-radius: 3px; position: relative; padding: 1.5px; display: flex; align-items: center; }
 .status-battery-fill { width: 80%; height: 100%; background: white; border-radius: 1px; }
 .status-battery-tip { position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 3px; height: 5px; background: rgba(255,255,255,0.8); border-radius: 0 1px 1px 0; }
+
+/* ── Mobile Responsiveness ─────────────────────── */
+@media (max-width: 768px) {
+  .about-app {
+    flex-direction: column;
+    top: 20px; left: 0; right: 0; bottom: 0;
+    border-radius: 20px 20px 0 0;
+  }
+  .about-sidebar {
+    width: 100%;
+    padding: 12px 12px 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--app-border);
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .about-sidebar::-webkit-scrollbar { display: none; }
+  .about-logo {
+    padding: 0 16px 0 0;
+    border-bottom: none;
+    border-right: 1px solid var(--app-border);
+    margin-bottom: 0;
+    margin-right: 12px;
+  }
+  .about-logo-text { display: none; }
+  
+  .about-profile-block { display: none; }
+  .about-contact-links { display: none; }
+  
+  .about-nav {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    gap: 8px;
+  }
+  .about-nav-btn {
+    padding: 8px 16px;
+    white-space: nowrap;
+    width: auto;
+    text-align: center;
+    border-radius: 20px;
+  }
+  
+  .about-scroll-container { padding: 24px 20px 100px; }
+  .stat-tile { min-width: calc(50% - 6px); padding: 12px; }
+  .stat-val { font-size: 1.3rem; }
+  
+  .exp-card { flex-direction: column; padding: 16px; gap: 10px; border-left-width: 4px; }
+  .exp-dot { display: none; }
+  .edu-card { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

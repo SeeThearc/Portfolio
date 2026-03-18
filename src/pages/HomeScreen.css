@@ -271,9 +271,26 @@
   text-align: center;
 }
 
-@media (max-width: 600px) {
-  .app-grid { gap: 20px; }
-  .app-icon-wrap { width: 64px; height: 64px; }
+/* ── Mobile Responsiveness ─────────────────────── */
+@media (max-width: 768px) {
+  .app-grid-wrapper { top: 60px; padding-top: 20px; bottom: 100px; }
+  .app-grid { gap: 16px; padding: 0 20px; }
+  .app-icon-wrap { width: 56px; height: 56px; border-radius: 18%; }
+  .app-icon-wrap svg { width: 24px; height: 24px; }
+  .app-label { font-size: 0.65rem; }
+  
+  .dock-wrapper { bottom: 20px; }
+  .dock { padding: 10px 16px; gap: 12px; border-radius: 22px; }
+  .dock-icon-wrap { width: 44px; height: 44px; border-radius: 12px; }
+  .dock-icon-wrap svg { width: 22px; height: 22px; }
+  
+  .theme-panel { padding: 20px; }
+  .theme-swatch { width: 48px; height: 34px; }
+  
+  .contact-panel-custom { padding: 20px; }
+  .contact-avatar-lg { width: 70px; height: 70px; }
+  .contact-name-lg { font-size: 1.2rem; }
+  .contact-action-btn { padding: 12px; font-size: 0.85rem; }
 }
 
 /* ── Contact Panel ───────────────────────────────── */

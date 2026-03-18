@@ -33,10 +33,10 @@
 
   /* Morphing into a highlight wrapper when over a button */
   .custom-cursor-dot.hovering {
-    width: 54px;
-    height: 54px;
-    margin-top: -27px;
-    margin-left: -27px;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+    margin-left: -18px;
     
     /* Becomes a faint glass wrapper */
     background: rgba(255, 255, 255, 0.12);
