@@ -54,7 +54,7 @@ export default function LockScreen() {
       {/* Center content */}
       <div className="lock-center">
         {/* Workspace badge */}
-        <div className="lock-badge anim-fadeup">PORTFOLIO WORKSPACE</div>
+        <div className="lock-badge anim-fadeup">SEETHEARC'S PORTFOLIO </div>
 
         {/* Clock */}
         <div className="lock-time anim-fadeup delay-1">{hh}:{mm}</div>
@@ -84,10 +84,10 @@ export default function LockScreen() {
             </div>
             <div className="notif-body">
               <div className="notif-header">
-                <span className="notif-title">Design Update</span>
-                <span className="notif-time">5s ago</span>
+                <span className="notif-title">Resume Updated</span>
+                <span className="notif-time">2h ago</span>
               </div>
-              <div className="notif-text">Latest portfolio case studies are now live.</div>
+              <div className="notif-text">Latest achievements added to my profile.</div>
             </div>
           </div>
         </div>

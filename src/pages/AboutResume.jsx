@@ -86,7 +86,7 @@ export default function AboutResume() {
 
           <div className="about-profile-block">
             <div className="about-avatar">
-              <img src="/avatar.png" alt="Ayush Agrawal" />
+              <img src="/animated_ayush.png" alt="Ayush Agrawal" />
             </div>
             <h3 className="about-name">Ayush Agrawal</h3>
             <p className="about-role-text">SeeThearc</p>

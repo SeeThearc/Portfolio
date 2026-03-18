@@ -191,7 +191,7 @@ export default function ProjectGallery() {
           {/* User profile at bottom */}
           <div className="sidebar-user">
             <div className="sidebar-avatar">
-              <img src="/avatar.png" alt="Ayush Agrawal" />
+              <img src="/animated_ayush.png" alt="Ayush Agrawal" />
             </div>
             <div>
               <p className="sidebar-username">Ayush Agrawal</p>
