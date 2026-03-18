@@ -1,0 +1,53 @@
+/* Only apply to devices with a real mouse/trackpad to avoid breaking touchscreens */
+@media (pointer: fine) {
+  body, body *, a, button, input, textarea, select {
+    cursor: none !important; 
+  }
+
+  .custom-cursor-dot {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    
+    /* iPad native cursor style: translucent gray with slight blur */
+    background: rgba(135, 135, 142, 0.5);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    
+    pointer-events: none; /* Crucial: ensures we don't block actual clicks */
+    z-index: 9999999;
+    
+    /* Smooth transition for morphing, but NOT for transforming/moving so it tracks instantly */
+    transition: width 0.2s cubic-bezier(0.25, 1, 0.5, 1), 
+                height 0.2s cubic-bezier(0.25, 1, 0.5, 1), 
+                background 0.2s ease, 
+                border-radius 0.2s ease, 
+                margin 0.2s cubic-bezier(0.25, 1, 0.5, 1),
+                transform 0.1s ease;
+                
+    /* Center it identically on the mouse tip */
+    margin-top: -10px;
+    margin-left: -10px;
+  }
+
+  /* Morphing into a highlight wrapper when over a button */
+  .custom-cursor-dot.hovering {
+    width: 54px;
+    height: 54px;
+    margin-top: -27px;
+    margin-left: -27px;
+    
+    /* Becomes a faint glass wrapper */
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* Tap animation (simulating a pencil tap) */
+  .custom-cursor-dot.clicking {
+    transform: scale(0.85);
+    background: rgba(255, 255, 255, 0.3);
+  }
+}

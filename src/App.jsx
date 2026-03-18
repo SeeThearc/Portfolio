@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { ThemeProvider } from './context/ThemeContext'
 import { AudioProvider } from './context/AudioContext'
+import CustomCursor from './components/CustomCursor'
 import AppSwitcher from './components/AppSwitcher'
 import LockScreen from './pages/LockScreen'
 import HomeScreen from './pages/HomeScreen'
@@ -12,6 +13,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <AudioProvider>
+        <CustomCursor />
         <BrowserRouter>
           <AppSwitcher>
             <Routes>
