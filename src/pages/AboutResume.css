@@ -197,20 +197,23 @@
 .edu-degree { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
 .edu-school { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 2px; }
 .edu-year { font-size: 0.75rem; color: var(--text-muted); }
-.edu-badge { font-size: 0.75rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; background: var(--badge-bg); border: 1px solid var(--badge-bdr); color: var(--badge-txt); flex-shrink: 0; }
+.edu-badge { font-size: 0.75rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; background: var(--badge-bg); border: 1px solid var(--badge-bdr); color: #ffffff; flex-shrink: 0; }
 
 /* Skills */
-.skill-group { display: flex; flex-direction: column; gap: 8px; }
-.skill-cat { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
-.skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.skill-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.skill-cat { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-secondary); margin-top: 4px; }
+.skill-chips { display: flex; flex-wrap: wrap; gap: 12px; }
 .skill-chip { 
-  font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; 
-  background: var(--badge-bg); border: 1px solid var(--badge-bdr); color: var(--badge-txt);
-  transition: all 0.2s ease; cursor: default;
+  font-size: 0.95rem; font-weight: 500; padding: 8px 18px; border-radius: 20px; 
+  background: var(--badge-bg); border: 1.5px solid var(--badge-bdr); color: var(--badge-txt);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); cursor: pointer;
 }
 .skill-chip:hover {
-  border-color: rgba(255, 255, 255, 0.9);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.15);
   color: #fff;
+  transform: translateY(-6px) rotate(-3deg) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px rgba(255,255,255,0.25);
 }
 
 /* Certifications */

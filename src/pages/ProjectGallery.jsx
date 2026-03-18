@@ -6,13 +6,15 @@ const PROJECTS = [
   {
     id: 1,
     title: 'StreamSphere',
-    type: 'WEB',
+    type: 'MERN',
     typeColor: '#3b82f6',
     bgColor: '#1a3a2a',
     desc: 'React.js OTT platform frontend with reusable components and 25% faster feature integration.',
     tags: ['React', 'CSS', 'JS'],
-    link: 'https://github.com/SeeThearc/StreamReact',
+    github: 'https://github.com/SeeThearc/StreamReact',
+    live: '#',
     thumbnail: '🎬',
+    featured: true,
   },
   {
     id: 2,
@@ -22,8 +24,10 @@ const PROJECTS = [
     bgColor: '#1a2a3a',
     desc: 'Decentralized file sharing with IPFS & Solidity. 100+ demo transfers on testnet.',
     tags: ['Solidity', 'Ethers.js', 'IPFS'],
-    link: 'https://github.com/SeeThearc/PINTURA',
+    github: 'https://github.com/SeeThearc/PINTURA',
+    live: '#',
     thumbnail: '🔗',
+    featured: true,
   },
   {
     id: 3,
@@ -33,29 +37,21 @@ const PROJECTS = [
     bgColor: '#1a2a1a',
     desc: 'Full-stack mall parking system. Real-time slot booking. 30% fewer conflicts.',
     tags: ['MongoDB', 'Express', 'React', 'Node'],
-    link: 'https://github.com/SeeThearc/ParkIT---Mall-parking-system',
+    github: 'https://github.com/SeeThearc/ParkIT---Mall-parking-system',
+    live: '#',
     thumbnail: '🅿️',
-  },
-  {
-    id: 4,
-    title: 'New Case Study',
-    isPlaceholder: true,
-    bgColor: '#111827',
-    desc: 'Add your latest achievement to the gallery.',
-    tags: [],
-    thumbnail: '+',
+    featured: false,
   },
 ]
 
 const SIDEBAR_WORKSPACE = [
   { label: 'All Projects', icon: '⊞', id: 'all' },
-  { label: 'Web Apps', icon: '🌐', id: 'web' },
-  { label: 'Blockchain', icon: '🔗', id: 'blockchain' },
-  { label: 'Brand Design', icon: '🎨', id: 'brand' },
+  { label: 'MERN', icon: '⚛️', id: 'MERN' },
+  { label: 'Blockchain (WEB3)', icon: '🔗', id: 'BLOCKCHAIN' },
+  { label: 'Machine Learning', icon: '🧠', id: 'MACHINE_LEARNING' },
 ]
 const SIDEBAR_ACCOUNT = [
   { label: 'Featured', icon: '⭐', id: 'featured' },
-  { label: 'Archived', icon: '📦', id: 'archived' },
 ]
 
 export default function ProjectGallery() {
@@ -63,6 +59,12 @@ export default function ProjectGallery() {
   const [activeFilter, setActiveFilter] = useState('all')
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
+
+  const displayedProjects = PROJECTS.filter(proj => {
+    if (activeFilter === 'featured') return proj.featured;
+    if (activeFilter === 'all') return true;
+    return proj.type === activeFilter;
+  });
 
   return (
     <div className="ipad-frame gallery-root">
@@ -158,64 +160,44 @@ export default function ProjectGallery() {
                 </svg>
               </button>
               <h1 className="gallery-title">Gallery</h1>
-              <div className="live-badge">
-                <span className="live-dot" />
-                LIVE UPDATES
-              </div>
             </div>
-            <div className="gallery-toolbar-right">
-              <div className="search-bar">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <circle cx="11" cy="11" r="8" stroke="rgba(255,255,255,0.4)" strokeWidth="2"/>
-                  <path d="M21 21l-4.35-4.35" stroke="rgba(255,255,255,0.4)" strokeWidth="2" strokeLinecap="round"/>
-                </svg>
-                <span>Search projects...</span>
-              </div>
-              <button className="toolbar-icon-btn">🔔</button>
-              <button className="gallery-new-btn">+ New Project</button>
+            <div className="gallery-toolbar-quote">
+              "Building decentralized experiences and pixel-perfect interfaces."
             </div>
           </div>
 
-          {/* Filter chips */}
-          <div className="gallery-filters">
-            {['All Stack', 'React', 'Tailwind', 'Node.js', 'Solidity'].map((f, i) => (
-              <button key={f} className={`filter-chip ${i === 0 ? 'filter-chip-active' : ''}`}>{f}</button>
-            ))}
-            <div className="gallery-sort">Sort by: <strong>Recent ▾</strong></div>
-          </div>
 
           {/* Project grid */}
-          <div className="gallery-grid">
-            {PROJECTS.map((proj, i) => (
+          <div className="gallery-grid" key={activeFilter}>
+            {displayedProjects.map((proj, i) => (
               <div
                 key={proj.id}
-                className={`gallery-card ${proj.isPlaceholder ? 'gallery-card-placeholder' : ''}`}
-                style={{ '--card-bg': proj.bgColor, animationDelay: `${i * 0.07 + 0.1}s` }}
-                onClick={() => !proj.isPlaceholder && window.open(proj.link, '_blank')}
+                className="gallery-card"
+                style={{ borderTop: `3px solid ${proj.typeColor}`, '--card-bg': proj.bgColor, animationDelay: `${i * 0.07 + 0.1}s` }}
               >
-                {proj.isPlaceholder ? (
-                  <div className="placeholder-inner">
-                    <div className="placeholder-plus">+</div>
-                    <p className="placeholder-label">New Case Study</p>
-                    <p className="placeholder-sub">Add your latest achievement to the gallery</p>
+                <div className="card-info">
+                  <div className="card-title-row">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span className="card-emoji" style={{ fontSize: '1.3rem', lineHeight: 1 }}>{proj.thumbnail}</span>
+                      <h3 className="card-title">{proj.title}</h3>
+                    </div>
+                    <span className="card-type" style={{ background: `${proj.typeColor}25`, color: proj.typeColor }}>{proj.type}</span>
                   </div>
-                ) : (
-                  <>
-                    <div className="card-thumb" style={{ background: proj.bgColor }}>
-                      <span className="card-emoji">{proj.thumbnail}</span>
-                    </div>
-                    <div className="card-info">
-                      <div className="card-title-row">
-                        <h3 className="card-title">{proj.title}</h3>
-                        <span className="card-type" style={{ background: `${proj.typeColor}25`, color: proj.typeColor }}>{proj.type}</span>
-                      </div>
-                      <p className="card-desc">{proj.desc}</p>
-                      <div className="card-tags">
-                        {proj.tags.map(t => <span key={t} className="card-tag">{t}</span>)}
-                      </div>
-                    </div>
-                  </>
-                )}
+                  <p className="card-desc">{proj.desc}</p>
+                  <div className="card-tags">
+                    {proj.tags.map(t => <span key={t} className="card-tag">{t}</span>)}
+                  </div>
+                  <div className="card-actions">
+                    <button className="card-action-btn btn-github" onClick={() => window.open(proj.github, '_blank')}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                      GitHub
+                    </button>
+                    <button className="card-action-btn btn-live" onClick={() => window.open(proj.live, '_blank')}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                      Live
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
