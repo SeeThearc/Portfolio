@@ -121,7 +121,7 @@ export default function AboutResume() {
               <h2 className="content-title">Professional Summary</h2>
               <p className="content-para">Enthusiastic Developer with a strong foundation in Data Structures, Algorithms, and full-stack web development. Proficient in C/C++, Python, HTML, CSS, JavaScript, and React. Skilled in building scalable and responsive applications, team collaboration, and problem-solving. Currently exploring blockchain, machine learning, and distributed systems.</p>
               <div className="stat-row">
-                {[['9.25','CGPA'],['150+','LeetCode'],['3','Projects'],['2','Certs']].map(([v,l]) => (
+                {[['9.25','CGPA'],['200+','LeetCode'],['2','Certifications']].map(([v,l]) => (
                   <div key={l} className="stat-tile">
                     <span className="stat-val">{v}</span>
                     <span className="stat-lbl">{l}</span>

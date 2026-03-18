@@ -234,16 +234,13 @@
 }
 .gallery-sort strong { color: rgba(255,255,255,0.7); font-weight: 600; }
 
-/* Card grid */
+/* Card layout (Masonry style, fixes grid overlap) */
 .gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  padding: 16px 20px;
+  column-width: 320px;
+  column-gap: 24px;
+  padding: 16px 20px 32px;
   overflow-y: auto;
   flex: 1;
-  align-content: start;
-  align-items: start;
 }
 
 .gallery-card {
@@ -255,6 +252,9 @@
   animation: fadeUp 0.4s ease both;
   display: flex;
   flex-direction: column;
+  break-inside: avoid;
+  margin-bottom: 24px;
+  width: 100%;
 }
 .gallery-card:hover {
   transform: translateY(-3px);
@@ -282,7 +282,7 @@
   padding: 16px 18px 18px; 
   display: flex;
   flex-direction: column;
-  flex: 1;
+  flex-grow: 1;
 }
 .card-title-row {
   display: flex;
