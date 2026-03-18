@@ -89,7 +89,7 @@ export default function AboutResume() {
               <img src="/avatar.png" alt="Ayush Agrawal" />
             </div>
             <h3 className="about-name">Ayush Agrawal</h3>
-            <p className="about-role-text">Full-Stack Dev</p>
+            <p className="about-role-text">SeeThearc</p>
             <p className="about-uni">VIT Chennai · CSE</p>
           </div>
 

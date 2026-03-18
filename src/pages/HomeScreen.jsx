@@ -25,8 +25,8 @@ const APP_ICONS = [
     icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="white" strokeWidth="1.8"/><path d="M2 8l10 6 10-6" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>,
   },
   {
-    id: 'blog', label: 'Blog', badge: null, color: '#be185d', path: 'https://leetcode.com/u/Thearc', external: true,
-    icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v2H4zM4 9h10v2H4zM4 14h12v2H4zM4 19h8v2H4z" fill="white"/></svg>,
+    id: 'resume', label: 'Resume', badge: null, color: '#be185d', path: 'https://drive.google.com/file/d/1AcvmfQV1eNeBI3TpYBaF3huMN1rofJKo/view?usp=sharing', external: true,
+    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
     id: 'themes', label: 'Themes', badge: null, color: null, /* dynamic */ path: '__themes__',
@@ -46,6 +46,10 @@ export default function HomeScreen() {
   const { theme, setTheme, themes } = useTheme()
   const [pressed, setPressed] = useState(null)
   const [themePicker, setThemePicker] = useState(false)
+  const [contactMode, setContactMode] = useState(null)
+  const [emailSubj, setEmailSubj] = useState('')
+  const [emailBody, setEmailBody] = useState('')
+  const [copied, setCopied] = useState(false)
 
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
@@ -56,6 +60,14 @@ export default function HomeScreen() {
   function handleAppTap(app) {
     if (app.path === '__themes__') {
       setThemePicker(true)
+      return
+    }
+    if (app.id === 'contact') {
+      setPressed(app.id)
+      setTimeout(() => {
+        setPressed(null)
+        setContactMode('options')
+      }, 150)
       return
     }
     setPressed(app.id)
@@ -156,6 +168,68 @@ export default function HomeScreen() {
             </div>
 
             <p className="theme-panel-hint">Changes apply instantly across all screens</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Contact Widget Panel ─────────────────────── */}
+      {contactMode && (
+        <div className="theme-overlay" onClick={() => setContactMode(null)}>
+          <div className="theme-panel contact-panel-custom" onClick={e => e.stopPropagation()}>
+            <div className="theme-panel-header">
+              <h2 className="theme-panel-title">{contactMode === 'compose' ? 'New Message' : 'Contact'}</h2>
+              <button className="theme-close" onClick={() => setContactMode(null)}>✕</button>
+            </div>
+            
+            {contactMode === 'options' ? (
+              <div className="contact-options-view">
+                <div className="contact-avatar-lg">
+                  <img src="/avatar.png" alt="Ayush" />
+                </div>
+                <h3 className="contact-name-lg">Ayush Agrawal</h3>
+                <p className="contact-role-lg">Available for opportunities</p>
+                
+                <div className="contact-btn-group">
+                  <button className="contact-action-btn" onClick={() => setContactMode('compose')}>
+                    <span className="cab-icon">✉️</span> Draft Email
+                  </button>
+                  <button className="contact-action-btn" onClick={() => {
+                    navigator.clipboard.writeText('ayushagrawal2334@gmail.com')
+                    setCopied(true)
+                    setTimeout(() => setCopied(false), 2000)
+                  }}>
+                    <span className="cab-icon">📋</span> {copied ? 'Copied!' : 'Copy Email Address'}
+                  </button>
+                  <button className="contact-action-btn" onClick={() => window.open('https://www.linkedin.com/in/ayush-agrawal23/', '_blank')}>
+                    <span className="cab-icon">💼</span> Connect on LinkedIn
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="contact-compose-view">
+                <div className="compose-field">
+                  <label>To:</label>
+                  <input type="text" value="ayushagrawal2334@gmail.com" disabled />
+                </div>
+                <div className="compose-field">
+                  <label>Subject:</label>
+                  <input type="text" placeholder="Hello from your portfolio!" value={emailSubj} onChange={e => setEmailSubj(e.target.value)} autoFocus />
+                </div>
+                <div className="compose-field compose-body-field">
+                  <textarea placeholder="Write your message here..." value={emailBody} onChange={e => setEmailBody(e.target.value)} />
+                </div>
+                <div className="compose-footer">
+                  <button className="compose-back" onClick={() => setContactMode('options')}>Back</button>
+                  <button className="compose-send" onClick={() => {
+                    const mailtoUrl = `mailto:ayushagrawal2334@gmail.com?subject=${encodeURIComponent(emailSubj)}&body=${encodeURIComponent(emailBody)}`
+                    window.location.href = mailtoUrl
+                    setContactMode(null)
+                    setEmailSubj('')
+                    setEmailBody('')
+                  }}>Send via Mail App ↗</button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
