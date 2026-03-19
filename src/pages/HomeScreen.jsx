@@ -26,7 +26,7 @@ const APP_ICONS = [
     icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="white" strokeWidth="1.8"/><path d="M2 8l10 6 10-6" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>,
   },
   {
-    id: 'resume', label: 'Resume', badge: null, color: '#be185d', path: 'https://drive.google.com/file/d/1AcvmfQV1eNeBI3TpYBaF3huMN1rofJKo/view?usp=sharing', external: true,
+    id: 'resume', label: 'Resume', badge: null, color: '#be185d', path: 'https://drive.google.com/file/d/1CkiBY8i4N9UNUsYwvx8dPemNU8YRmELN/view?usp=sharing', external: true,
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
