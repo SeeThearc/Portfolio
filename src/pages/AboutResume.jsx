@@ -193,8 +193,8 @@ export default function AboutResume() {
               <h2 className="content-title">Certifications</h2>
               {[
                 { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'var(--accent)', link: 'https://courses.vit.skillsnetwork.site/certificates/fd35bd85aa0f4e45bb2ce49543b69ef9' },
+                { title:'Machine Learning Specialization', issuer:'Coursera | Stanford Online', date:'April 2, 2026', icon:'🎰', color:'var(--accent-3)', link: 'https://www.coursera.org/account/accomplishments/specialization/A5G7HKFAATOI' },
                 { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'var(--accent-2)', link: 'https://www.udemy.com/certificate/UC-6d956b8e-7042-4c91-8381-c089758d1111/' },
-                { title:'Machine Learning Specialization', issuer:'Coursera|Stanford Online', date:'April 2, 2026', icon:'🎰', color:'var(--accent-3)', link: 'https://www.coursera.org/account/accomplishments/specialization/A5G7HKFAATOI' },
               ].map((c,i) => (
                 <a key={i} className="cert-card" href={c.link} target="_blank" rel="noreferrer">
                   <div className="cert-icon" style={{background:`${c.color}20`,border:`1px solid ${c.color}35`}}>{c.icon}</div>
