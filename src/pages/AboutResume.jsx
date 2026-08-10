@@ -156,7 +156,7 @@ export default function AboutResume() {
             <div className="content-pane" ref={el => sectionRefs.current['Education'] = el} id="Education">
               <h2 className="content-title">Education</h2>
               {[
-                { degree:'B.Tech – Computer Science Engineering', school:'Vellore Institute of Technology, Chennai', year:'Expected July 2027', badge:'CGPA: 9.25/10', icon:'🎓' },
+                { degree:'B.Tech – Computer Science Engineering', school:'Vellore Institute of Technology, Chennai', year:'Expected July 2027', badge:'CGPA: 9.20/10', icon:'🎓' },
                 { degree:'Higher Secondary (12th)', school:'Sacred Heart Public Sr. Sec. School, Kota', year:'March 2023', badge:'84%', icon:'🏫' },
               ].map((e,i) => (
                 <div key={i} className="edu-card">
