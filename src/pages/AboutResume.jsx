@@ -121,7 +121,7 @@ export default function AboutResume() {
               <h2 className="content-title">Professional Summary</h2>
               <p className="content-para">Enthusiastic Developer with a strong foundation in Data Structures, Algorithms, and full-stack web development. Proficient in C/C++, Python, HTML, CSS, JavaScript, and React. Skilled in building scalable and responsive applications, team collaboration, and problem-solving. Currently exploring blockchain, machine learning, and distributed systems.</p>
               <div className="stat-row">
-                {[['9.25','CGPA'],['200+','LeetCode'],['2','Certifications']].map(([v,l]) => (
+                {[['9.20','CGPA'],['300+','LeetCode'],['3','Certifications']].map(([v,l]) => (
                   <div key={l} className="stat-tile">
                     <span className="stat-val">{v}</span>
                     <span className="stat-lbl">{l}</span>
@@ -194,6 +194,7 @@ export default function AboutResume() {
               {[
                 { title:'Blockchain Developer', issuer:'IBM', date:'June 17, 2025', icon:'🔗', color:'var(--accent)', link: 'https://courses.vit.skillsnetwork.site/certificates/fd35bd85aa0f4e45bb2ce49543b69ef9' },
                 { title:'Mastering DSA using C and C++', issuer:'Udemy', date:'March 9, 2025', icon:'⚡', color:'var(--accent-2)', link: 'https://www.udemy.com/certificate/UC-6d956b8e-7042-4c91-8381-c089758d1111/' },
+                { title:'Machine Learning Specialization', issuer:'Coursera|Stanford Online', date:'April 2, 2026', icon:'🎰', color:'var(--accent-3)', link: 'https://www.coursera.org/account/accomplishments/specialization/A5G7HKFAATOI' },
               ].map((c,i) => (
                 <a key={i} className="cert-card" href={c.link} target="_blank" rel="noreferrer">
                   <div className="cert-icon" style={{background:`${c.color}20`,border:`1px solid ${c.color}35`}}>{c.icon}</div>
