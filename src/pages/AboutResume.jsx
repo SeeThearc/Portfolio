@@ -119,7 +119,7 @@ export default function AboutResume() {
             {/* ── Profile Section ── */}
             <div className="content-pane" ref={el => sectionRefs.current['Profile'] = el} id="Profile">
               <h2 className="content-title">Professional Summary</h2>
-              <p className="content-para">Enthusiastic Developer with a strong foundation in Data Structures, Algorithms, and full-stack web development. Proficient in C/C++, Python, HTML, CSS, JavaScript, and React. Skilled in building scalable and responsive applications, team collaboration, and problem-solving. Currently exploring blockchain, machine learning, and distributed systems.</p>
+              <p className="content-para">Software Engineering student with strong foundations in Data Structures, Algorithms, and full-stack development. Proficient in C/C++, JavaScript, and Python, with hands-on work building scalable web and AI-powered applications. Skilled in REST APIs, SDLC, Agile methodologies, and modern software development practices. Focused on building practical, user-centric solutions by integrating software engineering with machine learning and AI.</p>
               <div className="stat-row">
                 {[['9.20','CGPA'],['300+','LeetCode'],['3','Certifications']].map(([v,l]) => (
                   <div key={l} className="stat-tile">
