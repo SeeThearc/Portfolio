@@ -1,256 +1,38 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
-import './AppSwitcher.css'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useTheme } from '../context/ThemeContext'
+import { useAudio } from '../context/AudioContext'
+import { projects } from '../data/projects'
 
-// Mini preview thumbnails for each app
-const APP_CARDS = [
-  {
-    id: 'lock',
-    label: 'Lock Screen',
-    path: '/',
-    preview: <LockPreview />,
-  },
-  {
-    id: 'home',
-    label: 'Home',
-    path: '/home',
-    preview: <HomePreview />,
-  },
-  {
-    id: 'projects',
-    label: 'Projects',
-    path: '/projects',
-    preview: <ProjectsPreview />,
-  },
-  {
-    id: 'about',
-    label: 'About Me',
-    path: '/about',
-    preview: <AboutPreview />,
-  },
-]
-
-function LockPreview() {
-  return (
-    <div className="preview-lock">
-      <div className="prev-lock-badge">PORTFOLIO WORKSPACE</div>
-      <div className="prev-lock-time">14:37</div>
-      <div className="prev-lock-date">Tuesday, March 17</div>
-      <div className="prev-notif">
-        <div className="prev-notif-icon" style={{ background: 'var(--accent)' }} />
-        <div className="prev-notif-text">New Connection</div>
-      </div>
-      <div className="prev-notif">
-        <div className="prev-notif-icon" style={{ background: 'var(--accent-2)' }} />
-        <div className="prev-notif-text">Design Update</div>
-      </div>
-    </div>
-  )
+function Panel({name,children,onClose,className=''}) {
+ const ref=useRef(null)
+ useEffect(()=>{const previous=document.activeElement;ref.current.showModal();return()=>previous?.focus()},[])
+ return <dialog ref={ref} className={`os-panel ${className}`} aria-label={name} onCancel={onClose} onClick={e=>{if(e.target===ref.current)onClose()}}><div className="os-panel-heading"><h2>{name}</h2><button onClick={onClose} aria-label={`Close ${name}`}>×</button></div>{children}</dialog>
+}
+const initialNotices=[{id:'welcome',icon:'✦',title:'Welcome to my corner of the internet',app:'PORTFOLIO',text:'I’m Ayush. Tap to explore the person behind the projects.',path:'/about'},{id:'projects',icon:'⊞',title:'11 ideas. Built into reality.',app:'PROJECTS',text:'AI, full-stack, and Web3. Take a look around.',path:'/projects'},{id:'resume',icon:'↓',title:'The full story, in one document',app:'FILES',text:'My résumé is ready when you are.',path:'/Resume.pdf'}]
+const apps=[{label:'Home',path:'/home',icon:'⌂',color:'#eb825d'},{label:'Projects',path:'/projects',icon:'⊞',color:'#468cf0'},{label:'About Me',path:'/about',icon:'◉',color:'#a18be0'},{label:'Experience',path:'/about?tab=Experience',icon:'▣',color:'#63b395'},{label:'Skills',path:'/about?tab=Skills',icon:'ϟ',color:'#e3aa4c'}]
+function loadRecent(){try{return JSON.parse(sessionStorage.getItem('ipad-recents')||'[]').filter(p=>apps.some(a=>a.path===p))}catch{return []}}
+export default function AppSwitcher({children}) {
+ const navigate=useNavigate(),location=useLocation(),{theme,setTheme,themes}=useTheme(),{isMuted,toggleMute}=useAudio()
+ const [panel,setPanel]=useState(null),[query,setQuery]=useState(''),[time,setTime]=useState(new Date()),[recents,setRecents]=useState(loadRecent),[seen,setSeen]=useState(''),[notices,setNotices]=useState(initialNotices),[brightness,setBrightness]=useState(100),[focus,setFocus]=useState(false)
+ const start=useRef(null),device=useRef(null)
+ const path=location.pathname+location.search,locked=location.pathname==='/'
+ if(seen!==path){setSeen(path);if(apps.some(a=>a.path===path))setRecents(r=>[path,...r.filter(p=>p!==path)].slice(0,8))}
+ useEffect(()=>{try{sessionStorage.setItem('ipad-recents',JSON.stringify(recents))}catch{/* Session history is optional. */}},[recents])
+ useEffect(()=>{const id=setInterval(()=>setTime(new Date()),1000);const key=e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();setPanel(v=>v==='Spotlight'?null:'Spotlight')}if(e.altKey&&e.key==='Tab'){e.preventDefault();setPanel('Recent Apps')}if(e.key==='Escape')setPanel(null)};window.addEventListener('keydown',key);return()=>{clearInterval(id);window.removeEventListener('keydown',key)}},[])
+ function go(p){const recent=p.startsWith('/projects')?'/projects':p;if(apps.some(a=>a.path===recent))setRecents(r=>[recent,...r.filter(x=>x!==recent)]);setPanel(null);setQuery('');navigate(p)}
+ function openNotice(n){if(n.path.endsWith('.pdf'))window.open(n.path,'_blank','noopener,noreferrer');else go(n.path)}
+ const results=[...apps,...projects.map(p=>({label:p.title,path:`/projects?q=${encodeURIComponent(p.title)}`,icon:'⊞',color:p.typeColor}))].filter(a=>a.label.toLowerCase().includes(query.toLowerCase()))
+ return <div className="device-stage"><div className="device-frame" ref={device}><div className="camera-dot"/><div className={`device-screen ${!locked&&location.pathname!=="/home"?"app-is-open":""}`}><div className="ipad-wallpaper"/><div className="os-status" onPointerDown={e=>{start.current=e.clientY;e.target.closest("button")?.setPointerCapture(e.pointerId)}} onPointerUp={e=>{if(start.current!==null&&e.clientY-start.current>25){const rect=e.currentTarget.getBoundingClientRect();setPanel(e.clientX>rect.left+rect.width*.7?"Control Center":"Notification Center")};start.current=null}}><button aria-label="Open Notification Center" onClick={()=>setPanel('Notification Center')}>{time.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}<span>{time.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'})}</span>{!focus&&notices.length>0&&<i className="notification-dot"/>}</button><span className="device-owner">Ayush’s iPad</span><button aria-label="Open Control Center" onClick={()=>setPanel('Control Center')}><span>{focus?'☾':''}</span><svg width="17" height="15" viewBox="0 0 24 20" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M2 5q10-8 20 0M6 10q6-5 12 0M10 15q2-2 4 0"/></svg><span>100%</span><span className="status-battery"><span className="status-battery-fill" style={{display:'block'}}/></span></button></div><div className="os-content" inert={panel?true:undefined}>{children}</div><div className="brightness-veil" style={{opacity:(100-brightness)/125}}/>
+ {location.pathname==="/home"&&<button className="os-search-pill" onClick={()=>setPanel("Spotlight")} aria-label="Search portfolio">⌕ <span>Search</span></button>}{!locked&&<div className="system-tools"><button onClick={()=>go('/home')} aria-label="Go to Home Screen">⌂</button><button onClick={()=>setPanel('Spotlight')} aria-label="Open Spotlight">⌕</button><button onClick={()=>setPanel('Recent Apps')} aria-label="Open Recent Apps">▱</button><button onClick={()=>go('/')} aria-label="Lock iPad"><svg width="18" height="21" viewBox="0 0 24 28" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="4" y="12" width="16" height="13" rx="3"/><path d="M7 12V8a5 5 0 0 1 10 0v4"/><path d="M12 17v3"/></svg></button></div>}
+ <button className="os-home-indicator" aria-label={locked?'Unlock iPad':'Home indicator: click for home, swipe up for recent apps'} onPointerDown={e=>{start.current=e.clientY;e.target.closest("button")?.setPointerCapture(e.pointerId)}} onPointerUp={e=>{if(start.current===null)return;const delta=start.current-e.clientY;start.current=null;if(delta>35&&!locked)setPanel('Recent Apps');else go('/home')}} onKeyDown={e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go('/home')}}}><span/></button>
+ {panel==='Notification Center'&&<Panel name={panel} onClose={()=>setPanel(null)} className="notifications-panel"><div className="notification-clock">{time.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})}</div><p className="notification-date">{time.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</p><div className="notice-toolbar"><span>{notices.length} notifications</span>{notices.length>0&&<button onClick={()=>setNotices([])}>Clear all</button>}</div>{notices.map(n=><div className="os-notice" key={n.id}><button className="notice-open" onClick={()=>openNotice(n)}><span className={`notice-icon notice-${n.id}`}>{n.icon}</span><span><small>{n.app}</small><strong>{n.title}</strong><p>{n.text}</p></span></button><button className="notice-dismiss" aria-label={`Dismiss ${n.app} notification`} onClick={()=>setNotices(v=>v.filter(x=>x.id!==n.id))}>×</button></div>)}{!notices.length&&<p className="os-empty">You’re all caught up.</p>}</Panel>}
+ {panel==='Control Center'&&<Panel name={panel} onClose={()=>setPanel(null)} className="control-panel"><div className="control-grid"><button className={focus?'control-tile enabled':'control-tile'} onClick={()=>setFocus(!focus)} aria-pressed={focus}><b>☾</b><strong>Focus</strong><small>{focus?'On · notification badge hidden':'Off'}</small></button><button className={!isMuted?'control-tile enabled':'control-tile'} onClick={toggleMute} aria-pressed={!isMuted}><b>♫</b><strong>Ambient sound</strong><small>{isMuted?'Tap to play':'Playing · tap to mute'}</small></button><label className="brightness-control"><span>☀ <strong>Brightness</strong><small>{brightness}%</small></span><input type="range" min="35" max="100" value={brightness} onChange={e=>setBrightness(Number(e.target.value))} aria-label="Screen brightness"/></label><div className="wallpaper-control"><h3>Wallpaper</h3><div>{Object.values(themes).map(t=><button key={t.id} aria-label={`${t.name} wallpaper`} aria-pressed={theme===t.id} onClick={()=>setTheme(t.id)} style={{background:`linear-gradient(130deg,${t.preview.join(',')})`}}>{theme===t.id?'✓':''}<span>{t.name}</span></button>)}</div></div><button className="control-tile" onClick={()=>go('/')}><b><svg width="18" height="21" viewBox="0 0 24 28" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="4" y="12" width="16" height="13" rx="3"/><path d="M7 12V8a5 5 0 0 1 10 0v4"/><path d="M12 17v3"/></svg></b><strong>Lock screen</strong><small>Back to the beginning</small></button><button className="control-tile" onClick={()=>{if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});else device.current.requestFullscreen?.().catch(()=>{})}}><b>⛶</b><strong>Full screen</strong><small>Immerse yourself</small></button></div><p className="control-footnote">Your own little workspace. Make yourself at home.</p></Panel>}
+ {panel==='Spotlight'&&<Panel name={panel} onClose={()=>setPanel(null)} className="spotlight-panel"><input className="spotlight-input" autoFocus aria-label="Search apps and projects" placeholder="Search apps and projects" value={query} onChange={e=>setQuery(e.target.value)}/><p className="spotlight-label">{query?'SEARCH RESULTS':'SIRI SUGGESTIONS'}</p><div className="spotlight-results">{results.map(a=><button key={a.path} onClick={()=>go(a.path)}><span style={{background:a.color}}>{a.icon}</span><strong>{a.label}</strong><small>Open ↗</small></button>)}{!results.length&&<p className="os-empty">No results. Try “Projects” or “LeetCoach”.</p>}</div><p className="control-footnote">Ctrl / ⌘ K to search · Esc to close</p></Panel>}
+ {panel==='Recent Apps'&&<Panel name={panel} onClose={()=>setPanel(null)} className="recents-panel"><p className="recents-hint">Pick up where you left off.</p><div className="recent-grid">{recents.map(p=>{const app=apps.find(a=>a.path===p);return <article className="recent-app" key={p}><div className="recent-title"><span style={{background:app.color}}>{app.icon}</span><strong>{app.label}</strong><button aria-label={`Close ${app.label} recent app`} onClick={()=>setRecents(r=>r.filter(x=>x!==p))}>×</button></div><button className={`recent-preview ${p==='/home'?'recent-home':''}`} onClick={()=>go(p)} aria-label={`Resume ${app.label}`}>{p==='/projects'?<><div className="mini-toolbar">Projects <span>All projects</span></div><div className="mini-projects">{projects.slice(0,4).map(p=><img src={p.image} alt="" key={p.id}/>)}</div></>:p==='/home'?<><img className="mini-avatar" src="/animated_ayush.png" alt=""/><h3>Hey, I’m Ayush.</h3><div className="mini-icons">{apps.map(a=><span key={a.path} style={{background:a.color}}>{a.icon}</span>)}</div></>:<><img className="mini-avatar" src="/animated_ayush.png" alt=""/><h3>{app.label==='About Me'?'Ayush Agrawal':app.label}</h3><p>Software Engineer · VIT Chennai</p><div className="mini-stats"><b>9.20<small>CGPA</small></b><b>300+<small>LeetCode</small></b></div></>}</button></article>})}</div>{!recents.length&&<p className="os-empty">No recent apps. Open an app from the Home Screen to get started.</p>}<button className="recent-home-button" onClick={()=>go('/home')}>⌂ Home Screen</button></Panel>}
+ </div></div><div className="device-caption"><span>AYUSH AGRAWAL <i>✦</i> A PORTFOLIO, REIMAGINED.</span><span>Tap to explore. Swipe to switch. Make yourself at home.</span></div></div>
 }
 
-function HomePreview() {
-  const ICON_COLORS = ['var(--accent)','#374151','var(--accent-2)','#d97706','#7c3aed','#be185d']
-  return (
-    <div className="preview-home">
-      <div className="prev-home-icons">
-        {ICON_COLORS.map((c, i) => (
-          <div key={i} className="prev-home-icon" style={{ background: c }} />
-        ))}
-      </div>
-      <div className="prev-home-dock">
-        {['#1c1c1e','#1c1c1e','#0077b5','#f89f1b'].map((c, i) => (
-          <div key={i} className="prev-dock-icon" style={{ background: c }} />
-        ))}
-      </div>
-    </div>
-  )
-}
 
-function ProjectsPreview() {
-  return (
-    <div className="preview-projects">
-      <div className="prev-proj-sidebar">
-        <div className="prev-sidebar-item active" />
-        <div className="prev-sidebar-item" />
-        <div className="prev-sidebar-item" />
-      </div>
-      <div className="prev-proj-main">
-        <div className="prev-proj-header" />
-        <div className="prev-proj-grid">
-          {['#1a3a2a','#1a2a3a','#1a2a1a'].map((c, i) => (
-            <div key={i} className="prev-proj-card" style={{ background: c }} />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
 
-function AboutPreview() {
-  return (
-    <div className="preview-about">
-      <div className="prev-about-sidebar">
-        <div className="prev-about-avatar" />
-        <div className="prev-about-line" style={{ width: '70%' }} />
-        <div className="prev-about-line" style={{ width: '50%' }} />
-        <div className="prev-about-tabs">
-          {[true, false, false, false, false].map((a, i) => (
-            <div key={i} className={`prev-about-tab ${a ? 'active' : ''}`} />
-          ))}
-        </div>
-      </div>
-      <div className="prev-about-content">
-        <div className="prev-about-title" />
-        <div className="prev-about-para" />
-        <div className="prev-about-para" style={{ width: '80%' }} />
-        <div className="prev-about-stats">
-          {[0,1,2,3].map(i => <div key={i} className="prev-about-stat" />)}
-        </div>
-      </div>
-    </div>
-  )
-}
 
-export default function AppSwitcher({ children }) {
-  const navigate = useNavigate()
-  const location = useLocation()
-
-  const [open, setOpen] = useState(false)
-  const [dragY, setDragY] = useState(0)       // how far we've dragged up
-  const [animating, setAnimating] = useState(false)
-
-  const dragStartY = useRef(null)
-  const isDragging = useRef(false)
-  const indicatorRef = useRef(null)
-
-  // ──── Drag on home indicator ────────────────────────
-  const onPointerDown = useCallback((e) => {
-    dragStartY.current = e.clientY ?? e.touches?.[0]?.clientY
-    isDragging.current = true
-    setDragY(0)
-    e.preventDefault()
-  }, [])
-
-  const onPointerMove = useCallback((e) => {
-    if (!isDragging.current || dragStartY.current === null) return
-    const y = e.clientY ?? e.touches?.[0]?.clientY
-    const delta = dragStartY.current - y    // positive = dragging up
-    if (delta > 0) setDragY(delta)
-  }, [])
-
-  const onPointerUp = useCallback(() => {
-    if (!isDragging.current) return
-    isDragging.current = false
-    if (dragY > 40) {
-      // threshold crossed → open switcher
-      setOpen(true)
-    }
-    setDragY(0)
-    dragStartY.current = null
-  }, [dragY])
-
-  useEffect(() => {
-    window.addEventListener('mousemove', onPointerMove)
-    window.addEventListener('mouseup', onPointerUp)
-    window.addEventListener('touchmove', onPointerMove, { passive: false })
-    window.addEventListener('touchend', onPointerUp)
-    return () => {
-      window.removeEventListener('mousemove', onPointerMove)
-      window.removeEventListener('mouseup', onPointerUp)
-      window.removeEventListener('touchmove', onPointerMove)
-      window.removeEventListener('touchend', onPointerUp)
-    }
-  }, [onPointerMove, onPointerUp])
-
-  // ──── Navigate from switcher ─────────────────────
-  function switchTo(path) {
-    setAnimating(true)
-    setTimeout(() => {
-      setOpen(false)
-      setAnimating(false)
-      navigate(path)
-    }, 300)
-  }
-
-  function closeApp(e, id) {
-    e.stopPropagation()
-    // Dismiss the card with a shrink animation — in a real app we'd track closed state
-    // For now just close the switcher
-    setOpen(false)
-  }
-
-  // Peek amount while dragging (show bottom strip of switcher)
-  const indicatorPeek = Math.min(dragY * 1.5, 160)
-
-  return (
-    <>
-      {/* Main page content */}
-      <div
-        className="ipad-shell-content"
-        style={{
-          transform: open
-            ? 'scale(0.92) translateY(-20px)'
-            : dragY > 0
-              ? `scale(${1 - dragY * 0.0003}) translateY(-${dragY * 0.12}px)`
-              : undefined,
-          transition: open || dragY === 0 ? 'transform 0.45s cubic-bezier(0.4,0,0.2,1)' : 'none',
-        }}
-      >
-        {children}
-      </div>
-
-      {/* App Switcher overlay */}
-      <div
-        className={`switcher-overlay ${open ? 'switcher-open' : ''}`}
-        onClick={() => setOpen(false)}
-      >
-        <div className={`switcher-panel ${open ? 'switcher-panel-open' : ''} ${animating ? 'switcher-exit' : ''}`} onClick={e => e.stopPropagation()}>
-          <p className="switcher-label">Recent Apps</p>
-          <div className="switcher-cards">
-            {APP_CARDS.map((card) => (
-              <div
-                key={card.id}
-                className={`switcher-card ${location.pathname === card.path ? 'switcher-card-active' : ''}`}
-                onClick={() => switchTo(card.path)}
-              >
-                {/* Close button */}
-                <button
-                  className="switcher-card-close"
-                  onClick={(e) => closeApp(e, card.id)}
-                >×</button>
-
-                {/* App preview */}
-                <div className="switcher-card-preview">
-                  {card.preview}
-                </div>
-
-                <p className="switcher-card-label">{card.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Home indicator — draggable */}
-      <div
-        className="home-indicator-wrap"
-        ref={indicatorRef}
-        onMouseDown={onPointerDown}
-        onTouchStart={onPointerDown}
-        style={{
-          bottom: open ? '-20px' : 0,
-          transition: 'bottom 0.4s ease',
-        }}
-      >
-        <div
-          className="home-indicator-bar"
-          style={{
-            width: dragY > 0 ? `${120 + dragY * 0.5}px` : undefined,
-            opacity: open ? 0 : 1,
-            transition: 'width 0.1s ease, opacity 0.3s ease',
-          }}
-        />
-      </div>
-    </>
-  )
-}

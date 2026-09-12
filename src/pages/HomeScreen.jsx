@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useTheme, THEMES } from '../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
 import AudioToggle from '../components/AudioToggle'
 import './HomeScreen.css'
 
@@ -26,7 +26,7 @@ const APP_ICONS = [
     icon: <svg width="30" height="30" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="white" strokeWidth="1.8"/><path d="M2 8l10 6 10-6" stroke="white" strokeWidth="1.8" strokeLinecap="round"/></svg>,
   },
   {
-    id: 'resume', label: 'Resume', badge: null, color: '#be185d', path: 'https://ayushagrawal.is-a.dev/Resume.pdf', external: true,
+    id: 'resume', label: 'Resume', badge: null, color: '#be185d', path: '/Resume.pdf', external: true,
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>,
   },
   {
@@ -52,6 +52,23 @@ export default function HomeScreen() {
   const [emailBody, setEmailBody] = useState('')
   const [copied, setCopied] = useState(false)
 
+  useEffect(()=>{
+    if(!themePicker&&!contactMode)return
+    const previous=document.activeElement
+    const dialog=document.querySelector('.theme-panel')
+    const selectors='button, a[href], input:not(:disabled), textarea, [tabindex="0"]'
+    dialog?.querySelector(selectors)?.focus()
+    const key=e=>{
+      if(e.key==='Escape'){setThemePicker(false);setContactMode(null)}
+      if(e.key==='Tab'){
+        const items=[...dialog.querySelectorAll(selectors)],first=items[0],last=items[items.length-1]
+        if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus()}
+        else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus()}
+      }
+    }
+    document.addEventListener('keydown',key)
+    return()=>{document.removeEventListener('keydown',key);previous?.focus()}
+  },[themePicker,contactMode])
   const now = new Date()
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
 
@@ -97,11 +114,18 @@ export default function HomeScreen() {
 
       {/* App Grid */}
       <div className="app-grid-wrapper">
+        <div className="home-heading"><div><p>YOUR DAILY DOSE OF CURIOSITY</p><h1>A little more than a portfolio.</h1></div><span>Welcome to my workspace.</span></div>
+        <div className="home-widgets">
+          <button className="home-widget profile-widget" onClick={()=>navigate('/about')}><div><span className="widget-kicker">THE PERSON BEHIND THE CODE</span><h2>Hey, I’m Ayush<span>.</span></h2><p>I turn interesting problems<br/>into thoughtful software.</p><span className="widget-chip"><i/> Open to opportunities</span></div><img src="/animated_ayush.png" alt="Ayush Agrawal"/><span className="widget-arrow">↗</span></button>
+          <button className="home-widget calendar-widget" onClick={()=>navigate('/about?tab=Experience')}><span>{now.toLocaleDateString('en-US',{weekday:'long'})}</span><strong>{now.getDate()}</strong><p>{now.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</p><div className="calendar-event"><b>Always in progress</b><small>Learning. Building. Repeating.</small></div></button>
+          <button className="home-widget projects-widget" onClick={()=>navigate('/projects')}><span className="widget-kicker">FROM IDEA TO REALITY</span><div className="widget-project-images"><img src="/leetcoach.png" alt=""/><img src="/pintura.png" alt=""/></div><div className="widget-project-footer"><div><b>Things I’ve built</b><small>11 projects · endless possibilities</small></div><span>↗</span></div></button>
+        </div>
+        <p className="home-app-section-label">A FEW APPS. A WHOLE LOT OF ME.</p>
         <div className="app-grid anim-fadeup">
           {APP_ICONS.map((app, i) => (
             <div
               key={app.id}
-              className={`app-item ${pressed === app.id ? 'app-pressed' : ''}`}
+              role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();handleAppTap(app)}}} className={`app-item ${pressed === app.id ? 'app-pressed' : ''}`}
               style={{ animationDelay: `${i * 0.06}s` }}
               onClick={() => handleAppTap(app)}
             >
@@ -122,7 +146,7 @@ export default function HomeScreen() {
       <div className="dock-wrapper anim-fadeup delay-6">
         <div className="dock">
           {DOCK_ITEMS.map((item) => (
-            <div key={item.id} className="dock-item" onClick={() => handleAppTap(item)}>
+            <div key={item.id} role="button" tabIndex={0} aria-label={item.id} onKeyDown={e=>{if(e.key==="Enter")handleAppTap(item)}} className="dock-item" onClick={() => handleAppTap(item)}>
               <div className="dock-icon-wrap" style={{ background: item.bg }}>{item.icon}</div>
             </div>
           ))}
@@ -132,7 +156,7 @@ export default function HomeScreen() {
       {/* ── Theme Picker Panel ─────────────────────── */}
       {themePicker && (
         <div className="theme-overlay" onClick={() => setThemePicker(false)}>
-          <div className="theme-panel" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-label="Appearance" className="theme-panel" onClick={e => e.stopPropagation()}>
             <div className="theme-panel-header">
               <h2 className="theme-panel-title">Appearance</h2>
               <button className="theme-close" onClick={() => setThemePicker(false)}>✕</button>
@@ -143,7 +167,7 @@ export default function HomeScreen() {
               {Object.values(themes).map(t => (
                 <div
                   key={t.id}
-                  className={`theme-option ${theme === t.id ? 'theme-option-active' : ''}`}
+                  role="button" tabIndex={0} onKeyDown={e=>{if(e.key==="Enter")setTheme(t.id)}} className={`theme-option ${theme === t.id ? 'theme-option-active' : ''}`}
                   onClick={() => { setTheme(t.id); setTimeout(() => setThemePicker(false), 300) }}
                 >
                   {/* Colour preview swatch */}
@@ -156,7 +180,7 @@ export default function HomeScreen() {
 
                   <div className="theme-option-info">
                     <span className="theme-option-name">{t.name}</span>
-                    {t.id === 'green' && <span className="theme-option-default">Default</span>}
+                    {t.id === 'blue' && <span className="theme-option-default">Default</span>}
                   </div>
 
                   {theme === t.id && (
@@ -178,7 +202,7 @@ export default function HomeScreen() {
       {/* ── Contact Widget Panel ─────────────────────── */}
       {contactMode && (
         <div className="theme-overlay" onClick={() => setContactMode(null)}>
-          <div className="theme-panel contact-panel-custom" onClick={e => e.stopPropagation()}>
+          <div role="dialog" aria-modal="true" aria-label="Contact" className="theme-panel contact-panel-custom" onClick={e => e.stopPropagation()}>
             <div className="theme-panel-header">
               <h2 className="theme-panel-title">{contactMode === 'compose' ? 'New Message' : 'Contact'}</h2>
               <button className="theme-close" onClick={() => setContactMode(null)}>✕</button>
@@ -197,8 +221,8 @@ export default function HomeScreen() {
                     <span className="cab-icon">✉️</span> Draft Email
                   </button>
                   <button className="contact-action-btn" onClick={() => {
-                    navigator.clipboard.writeText('ayushagrawal2334@gmail.com')
-                    setCopied(true)
+                    navigator.clipboard.writeText('ayushagrawal2334@gmail.com').then(()=>setCopied(true)).catch(()=>setCopied(false))
+
                     setTimeout(() => setCopied(false), 2000)
                   }}>
                     <span className="cab-icon">📋</span> {copied ? 'Copied!' : 'Copy Email Address'}
@@ -239,3 +263,5 @@ export default function HomeScreen() {
     </div>
   )
 }
+
+

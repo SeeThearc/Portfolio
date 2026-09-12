@@ -1,158 +1,16 @@
-import { useState, useRef, useCallback } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useRef, useCallback, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import './ProjectGallery.css'
 
-const PROJECTS = [
-  {
-    id: 8,
-    title: 'LeetCoach',
-    type: 'AI / AGENTIC',
-    typeColor: '#6366f1',
-    desc: 'AI-powered LeetCode tutor using progressive hints, code reviews, and personalized weakness tracking.',
-    tags: ['React', 'FastAPI', 'LangGraph', 'Gemini', 'PostgreSQL'],
-    github: '#',
-    live: '#',
-    image: '/leetcoach.png',
-    placeholderSeed: 'leetcoach42',
-    featured: true,
-  },
-  {
-    id: 9,
-    title: 'Proctorly',
-    type: 'AI / MERN',
-    typeColor: '#ec4899',
-    desc: 'AI-powered exam proctoring platform with face recognition, violation detection, and automated monitoring.',
-    tags: ['React', 'Node', 'MongoDB', 'face-api.js', 'Socket.IO'],
-    github: 'https://github.com/SeeThearc/Proctorly-AI-Exam-Proctor',
-    live: '#',
-    image: '/proctorly.jpg',
-    placeholderSeed: 'proctorly91',
-    featured: true,
-  },
-  {
-    id: 14,
-    title: 'Last Mile Delivery Tracker',
-    type: 'FULL STACK',
-    typeColor: '#14b8a6',
-    desc: 'Logistics tracking platform with delivery stages, agent assignment, zones, and zone-based ETA estimation.',
-    tags: ['React', 'Node', 'Express', 'Database'],
-    github: 'https://github.com/SeeThearc/LastMile',
-    live: 'https://last-mile-o247.vercel.app',
-    image: '/lastmile.jpg',
-    placeholderSeed: 'lastmile64',
-    featured: true,
-  },
-  {
-    id: 16,
-    title: 'PulseBank Analytics',
-    type: 'DATA / AI',
-    typeColor: '#f43f5e',
-    desc: 'AI-powered banking analytics dashboard for KPI monitoring, operational insights, and intelligent reporting.',
-    tags: ['React', 'Analytics', 'AI', 'Data Visualization'],
-    github: '#',
-    live: '#',
-    image: '/pulsebank.jpg',
-    placeholderSeed: 'pulsebank28',
-    featured: true,
-  },
-  {
-    id: 2,
-    title: 'Pintura',
-    type: 'BLOCKCHAIN',
-    typeColor: '#8b5cf6',
-    desc: 'Decentralized file sharing with IPFS & Solidity. 100+ demo transfers on testnet.',
-    tags: ['Solidity', 'Ethers.js', 'IPFS'],
-    github: 'https://github.com/SeeThearc/PINTURA',
-    live: 'https://pintura-chi.vercel.app/',
-    image: '/pintura.png',
-    placeholderSeed: 'pintura42',
-    featured: true,
-  },
-  {
-    id: 3,
-    title: 'ParkIT',
-    type: 'MERN',
-    typeColor: '#10b981',
-    desc: 'Full-stack mall parking system. Real-time slot booking. 30% fewer conflicts.',
-    tags: ['MongoDB', 'Express', 'React', 'Node'],
-    github: 'https://github.com/SeeThearc/ParkIT---Mall-parking-system',
-    live: 'https://park-it-mall-parking-system-tfwi.vercel.app/',
-    image: '/parkit.png',
-    placeholderSeed: 'parkit88',
-    featured: false,
-  },
-  {
-    id: 1,
-    title: 'StreamSphere',
-    type: 'MERN',
-    typeColor: '#3b82f6',
-    desc: 'React.js OTT platform frontend with reusable components and 25% faster feature integration.',
-    tags: ['React', 'CSS', 'JS'],
-    github: 'https://github.com/SeeThearc/StreamReact',
-    live: '#',
-    image: '/streamsphere.png',
-    placeholderSeed: 'stream12',
-    featured: false,
-  },
-  {
-    id: 5,
-    title: 'HotReload',
-    type: 'Go',
-    typeColor: '#06b6d4',
-    desc: 'HotReload is a fast dev tool that enables real-time updates in Go apps without restarting.',
-    tags: ['Go'],
-    github: 'https://github.com/SeeThearc/hotreload',
-    live: '#',
-    image: '/hotreload.png',
-    placeholderSeed: 'golang77',
-    featured: true,
-  },
-  {
-    id: 4,
-    title: 'UniStay',
-    type: 'MERN',
-    typeColor: '#f59e0b',
-    desc: 'Smart hostel management platform that simplifies room allocation, payments, and student accommodation.',
-    tags: ['React', 'CSS', 'JS', 'Node', 'Express', 'MongoDB'],
-    github: 'https://github.com/SeeThearc/UniStay',
-    live: 'https://uni-stay-s7sm.vercel.app',
-    image: '/unistay.png',
-    placeholderSeed: 'unistay55',
-    featured: true,
-  },
-  {
-    id: 6,
-    title: 'Nuvora — EHR',
-    type: 'BLOCKCHAIN',
-    typeColor: '#8b5cf6',
-    desc: 'Web3-based EHR system enabling secure, decentralized, tamper-proof patient data management.',
-    tags: ['Solidity', 'Ethers.js', 'IPFS', 'React', 'Metamask'],
-    github: 'https://github.com/SeeThearc/Nuvora---Electronic-Health-Records',
-    live: 'https://nuvora-electronic-health-records.vercel.app/',
-    image: '/nuvora.png',
-    placeholderSeed: 'nuvora33',
-    featured: true,
-  },
-  {
-    id: 7,
-    title: 'Delcopa Faucet',
-    type: 'BLOCKCHAIN',
-    typeColor: '#f59e0b',
-    desc: 'Web3 app that distributes free Delcopa ERC-20 tokens for testing and development purposes.',
-    tags: ['Solidity', 'Ethers.js', 'React', 'Metamask'],
-    github: 'https://github.com/SeeThearc/DelCopa-Faucet-ERC20-Token-',
-    live: 'https://del-copa-faucet-erc-20-token.vercel.app/',
-    image: '/delcopa.png',
-    placeholderSeed: 'delcopa21',
-    featured: false,
-  },
-]
+import { projects as PROJECTS } from '../data/projects'
 
 const SIDEBAR_WORKSPACE = [
   { label: 'All Projects', icon: '⊞', id: 'all' },
   { label: 'MERN', icon: '⚛️', id: 'MERN' },
   { label: 'Blockchain (WEB3)', icon: '🔗', id: 'BLOCKCHAIN' },
-  { label: 'Machine Learning', icon: '🧠', id: 'MACHINE_LEARNING' },
+  { label: 'AI & Machine Learning', icon: '🧠', id: 'MACHINE_LEARNING' },
+  { label: 'Full Stack', icon: '▣', id: 'FULL STACK' },
+  { label: 'Developer Tools', icon: '⌘', id: 'Go' },
 ]
 const SIDEBAR_ACCOUNT = [
   { label: 'Featured', icon: '⭐', id: 'featured' },
@@ -165,6 +23,7 @@ function ProjectCard({ proj, onOpen, index }) {
   const rafRef = useRef(null)
 
   const handleMouseMove = useCallback((e) => {
+    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return
     if (rafRef.current) cancelAnimationFrame(rafRef.current)
     rafRef.current = requestAnimationFrame(() => {
       const card = cardRef.current
@@ -202,7 +61,7 @@ function ProjectCard({ proj, onOpen, index }) {
   return (
     <div
       ref={cardRef}
-      className="gallery-card"
+      className="gallery-card" role="button" tabIndex={0} aria-label={`Open ${proj.title}`} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==="Enter"||e.key===" ")){e.preventDefault();onOpen(proj)}}}
       style={{ animationDelay: `${index * 0.07 + 0.1}s` }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
@@ -246,7 +105,7 @@ function ProjectCard({ proj, onOpen, index }) {
         <div className="card-actions" onClick={e => e.stopPropagation()}>
           <button
             className="card-action-btn btn-github"
-            onClick={() => window.open(proj.github, '_blank')}
+            disabled={proj.github === '#'} onClick={() => window.open(proj.github, '_blank', 'noopener,noreferrer')}
           >
             <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
@@ -274,10 +133,11 @@ function ProjectCard({ proj, onOpen, index }) {
 
 /* ── Expand Modal ─────────────────────────────────── */
 function ProjectModal({ proj, onClose }) {
-  if (!proj) return null
+  const dialogRef=useRef(null)
+  useEffect(()=>{const previous=document.activeElement;dialogRef.current.showModal();return()=>previous?.focus()},[])
 
   return (
-    <div className="modal-backdrop" onClick={onClose}>
+    <dialog ref={dialogRef} className="project-dialog" aria-label={proj.title} onCancel={onClose} onClick={e=>{if(e.target===dialogRef.current)onClose()}}>
       <div className="modal-card" onClick={e => e.stopPropagation()}>
         {/* Modal image header */}
         <div className="modal-image-wrap">
@@ -291,7 +151,7 @@ function ProjectModal({ proj, onClose }) {
             }}
           />
           <div className="modal-image-overlay" />
-          <button className="modal-close" onClick={onClose}>
+          <button className="modal-close" aria-label="Close project" onClick={onClose}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
@@ -321,14 +181,14 @@ function ProjectModal({ proj, onClose }) {
           <div className="modal-actions">
             <a
               className="modal-action-btn btn-github"
-              href={proj.github}
+              href={proj.github === "#" ? `mailto:ayushagrawal2334@gmail.com?subject=${encodeURIComponent(proj.title)}` : proj.github}
               target="_blank"
               rel="noreferrer"
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.379.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
               </svg>
-              View on GitHub
+              {proj.github === "#" ? "Ask about this project" : "View on GitHub"}
             </a>
             {proj.live && proj.live !== '#' && (
               <a
@@ -348,13 +208,15 @@ function ProjectModal({ proj, onClose }) {
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
   )
 }
 
 /* ── Main Page ────────────────────────────────────── */
 export default function ProjectGallery() {
   const navigate = useNavigate()
+  const [searchParams,setSearchParams]=useSearchParams()
+  const query=searchParams.get('q')||''
   const [activeFilter, setActiveFilter] = useState('all')
   const [openProject, setOpenProject] = useState(null)
 
@@ -362,6 +224,9 @@ export default function ProjectGallery() {
   const timeStr = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`
 
   const displayedProjects = PROJECTS.filter(proj => {
+    if(![proj.title,proj.desc,...proj.tags].join(" ").toLowerCase().includes(query.toLowerCase())) return false
+    if(activeFilter === 'MACHINE_LEARNING') return /^(AI|DATA)/.test(proj.type)
+    if(activeFilter === 'MERN') return proj.type.includes('MERN')
     if (activeFilter === 'featured') return proj.featured
     if (activeFilter === 'all') return true
     return proj.type === activeFilter
@@ -442,7 +307,7 @@ export default function ProjectGallery() {
               <p className="sidebar-username">Ayush Agrawal</p>
               <p className="sidebar-userrole">@SeeThearc</p>
             </div>
-            <button className="sidebar-settings">⚙</button>
+            <button className="sidebar-settings" aria-label="Go to appearance settings" onClick={()=>navigate("/home")}>⚙</button>
           </div>
         </aside>
 
@@ -457,13 +322,13 @@ export default function ProjectGallery() {
               </button>
               <h1 className="gallery-title">Gallery</h1>
             </div>
-            <div className="gallery-toolbar-quote">
+            <input className="os-project-search" aria-label="Search projects" placeholder="Search projects…" value={query} onChange={e=>setSearchParams(e.target.value?{q:e.target.value}:{},{replace:true})}/><div className="gallery-toolbar-quote">
               "Code. Debug. Improve. Repeat."
             </div>
           </div>
 
           {/* Project grid */}
-          <div className="gallery-grid" key={activeFilter}>
+          <div className="gallery-grid" key={activeFilter}>{displayedProjects.length===0&&<p className="gallery-empty">No projects found. Try another search or category.</p>}
             {displayedProjects.map((proj, i) => (
               <ProjectCard
                 key={proj.id}
@@ -483,3 +348,6 @@ export default function ProjectGallery() {
     </div>
   )
 }
+
+
+
