@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import NavigationIcon from '../components/NavigationIcon'
+import CalendarPopover from '../components/CalendarPopover'
 import './HomeScreen.css'
 
 const apps = [
@@ -39,13 +40,14 @@ function Appearance({ onClose }) {
 }
 export default function HomeScreen() {
   const [themePicker, setThemePicker] = useState(false)
+  const [calendarOpen, setCalendarOpen] = useState(false)
   const now = new Date()
   return <div className="ipad-frame home-root"><div className="ipad-wallpaper"/>
     <div className="app-grid-wrapper">
       <div className="home-heading"><div><p>YOUR DAILY DOSE OF CURIOSITY</p><h1>A little more than a portfolio.</h1></div><span>Welcome to my workspace.</span></div>
       <div className="home-widgets">
         <Link className="home-widget profile-widget" to="/about"><div><span className="widget-kicker">THE PERSON BEHIND THE CODE</span><h2>Hey, I’m Ayush<span>.</span></h2><p>I turn interesting problems<br/>into thoughtful software.</p><span className="widget-chip"><i/> Open to opportunities</span></div><img src="/animated_ayush.png" alt="Ayush Agrawal"/><span className="widget-arrow">↗</span></Link>
-        <Link className="home-widget calendar-widget" to="/experience"><span>{now.toLocaleDateString('en-US',{weekday:'long'})}</span><strong>{now.getDate()}</strong><p>{now.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</p><div className="calendar-event"><b>Always in progress</b><small>Learning. Building. Repeating.</small></div></Link>
+        <button className="home-widget calendar-widget" aria-label="Open Calendar" aria-haspopup="dialog" onClick={() => setCalendarOpen(true)}><span>{now.toLocaleDateString('en-US',{weekday:'long'})}</span><strong>{now.getDate()}</strong><p>{now.toLocaleDateString('en-US',{month:'long',year:'numeric'})}</p><div className="calendar-event"><b>Always in progress</b><small>Learning. Building. Repeating.</small></div></button>
         <Link className="home-widget projects-widget" to="/projects"><span className="widget-kicker">FROM IDEA TO REALITY</span><div className="widget-project-images"><img src="/leetcoach.png" alt=""/><img src="/pintura.png" alt=""/></div><div className="widget-project-footer"><div><b>Things I’ve built</b><small>11 projects · endless possibilities</small></div><span>↗</span></div></Link>
       </div>
       <p className="home-app-section-label">A FEW APPS. A WHOLE LOT OF ME.</p>
@@ -62,6 +64,8 @@ export default function HomeScreen() {
       <a className="dock-item" href="https://www.linkedin.com/in/ayush-agrawal23/" target="_blank" rel="noreferrer" aria-label="linkedin"><span className="dock-icon-wrap" style={{background:'#0077b5',fontSize:28,fontWeight:700}}>in</span></a>
       <a className="dock-item" href="https://leetcode.com/u/Thearc" target="_blank" rel="noreferrer" aria-label="LeetCode"><span className="dock-icon-wrap" style={{background:'#d49c39'}}><svg width="27" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m15.5 2-10 10a4.2 4.2 0 0 0 0 6l3 3a4.2 4.2 0 0 0 6 0l2-2"/><path d="m8.5 9 2-2a4.2 4.2 0 0 1 6 0l2 2M11 15h10"/></svg></span></a>
     </div></div>
+    {calendarOpen && <CalendarPopover onClose={() => setCalendarOpen(false)}/>}
     {themePicker && <Appearance onClose={() => setThemePicker(false)}/>}
   </div>
 }
+
