@@ -1,16 +1,38 @@
-# React + Vite
+# Ayush's iPad - interactive portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An iPad-inspired portfolio built with React and Vite. The original lock screen, app launcher, project gallery, profile, contact composer, resume, appearance picker, audio, dock, and recent-app interactions are retained and upgraded.
 
-Currently, two official plugins are available:
+```sh
+npm install
+npm run dev
+npm run lint
+npm run build
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Explore
 
-## React Compiler
+- Click or swipe up to unlock. Click the home indicator to return home; drag it upward to open recent apps.
+- The top-left clock opens Notification Center; the top-right status icons open Control Center. A downward drag from either side also opens its panel.
+- Notifications open the related content and can be dismissed individually or cleared.
+- Recent apps track visited screens during the session. Close a card to dismiss it, or select it to resume.
+- Search with the Home Screen search pill or Ctrl/Cmd+K. Alt+Tab opens recent apps when the browser receives the shortcut; the OS may reserve it.
+- Control Center provides three wallpapers, simulated screen brightness, focus (hides the notification badge), ambient audio, lock, and browser fullscreen where supported.
+- Ambient sound is synthesized locally and starts only after interaction. No external audio request is needed.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Content and implementation
 
-## Expanding the ESLint configuration
+`src/components/AppSwitcher.jsx` owns the device shell and system panels. `src/pages/` contains the original app screens. `src/ipad.css` refines the device, wallpaper, widgets, and responsive presentation. `src/index.css` provides the shared foundation. `src/data/projects.js` is the single source of project content. The resume and images live in `public/`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Appearance is saved locally; recent apps are session-scoped. Both work without browser storage. Notification cards are portfolio shortcuts, not a live messaging feed. Device status is decorative; brightness affects this portfolio only.
+
+The prior studio redesign is retained in `src/studio/` but is not imported by the app.
+
+Serve `index.html` for application routes (`/home`, `/projects`, `/about`) when hosting. Email composition opens the visitor's mail app; clipboard copying requires HTTPS or localhost.
+
+## Dedicated portfolio apps
+
+- `/skills`: searchable skill categories, with links to projects demonstrating the tools.
+- `/experience`: an interactive role selector, contributions, education link, and resume download.
+- `/contact`: a dedicated contact card and message composer. Drafts stay in session storage when switching apps or reloading. Visitors review and send in their mail app or Gmail; the portfolio itself does not send email. Copy actions report success or offer manual selection when clipboard access is denied.
+
+All three apps are available from the Home Screen, Spotlight, and Recent Apps. Legacy `/about?tab=Skills` and `/about?tab=Experience` links redirect to the dedicated apps. Include the new application routes in your host's SPA fallback.

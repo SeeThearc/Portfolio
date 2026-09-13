@@ -176,10 +176,10 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
   cursor: pointer;
   animation: fadeUp 0.4s ease both;
-  /* border/shadow via CSS, transform driven by JS */
+  /* Stable card bounds; hover feedback is painted inside the card. */
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
-  will-change: transform;
-  transform-style: preserve-3d;
+
+
   transform: perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1);
 }
 
@@ -188,7 +188,7 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.1);
 }
 
-/* Cursor-following glare sheen */
+/* Static hover sheen */
 .card-glare {
   position: absolute;
   inset: 0;
@@ -581,3 +581,4 @@
   filter: brightness(1.15);
   box-shadow: 0 4px 16px var(--accent-glow);
 }
+

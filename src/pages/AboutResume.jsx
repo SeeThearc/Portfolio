@@ -1,12 +1,12 @@
+import NavigationIcon from '../components/NavigationIcon'
 import { useState, useEffect, useRef, useLayoutEffect } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link } from 'react-router-dom'
 import './AboutResume.css'
 
-const SKILLS = {
-  'Languages': ['C', 'C++', 'Java', 'Python', 'JavaScript', 'HTML', 'CSS', 'Solidity', 'SQL'],
-  'Frameworks': ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Hardhat', 'Ethers.js', 'Scikit-learn'],
-  'Concepts': ['DSA', 'OOP', 'Machine Learning', 'Blockchain', 'Data Visualization'],
-}
+import { skillGroups } from '../data/skills'
+import { experienceRoles } from '../data/experience'
+
+const SKILLS = Object.fromEntries(skillGroups.map(group => [group.name, group.items]))
 const TABS = ['Profile', 'Experience', 'Education', 'Skills', 'Certifications']
 
 export default function AboutResume() {
@@ -56,6 +56,7 @@ export default function AboutResume() {
   }, [])
 
   function scrollToSection(section) {
+    if(section === 'Skills' || section === 'Experience'){navigate('/'+section.toLowerCase());return}
     if (sectionRefs.current[section] && contentRef.current) {
       const topPos = sectionRefs.current[section].offsetTop - 32
       contentRef.current.scrollTo({ top: topPos, behavior: 'smooth' })
@@ -78,9 +79,7 @@ export default function AboutResume() {
         {/* Sidebar */}
         <aside className="about-sidebar">
           <div className="about-logo">
-            <button className="about-back-btn" onClick={() => navigate('/home')}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 12H5m0 0l7 7m-7-7l7-7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-            </button>
+            <button className="about-back-btn" aria-label="Back to Home Screen" onClick={() => navigate('/home')}><NavigationIcon /></button>
             <span className="about-logo-text">About Me</span>
           </div>
 
@@ -106,7 +105,7 @@ export default function AboutResume() {
           </nav>
 
           <div className="about-contact-links">
-            <a href="mailto:ayushagrawal2334@gmail.com" className="about-contact-link">✉ Email</a>
+            <Link to="/contact" className="about-contact-link">✉ Email</Link>
             <a href="https://github.com/SeeThearc" target="_blank" rel="noreferrer" className="about-contact-link">⌥ GitHub</a>
             <a href="https://www.linkedin.com/in/ayush-agrawal23/" target="_blank" rel="noreferrer" className="about-contact-link">↗ LinkedIn</a>
           </div>
@@ -135,16 +134,14 @@ export default function AboutResume() {
             {/* ── Experience Section ── */}
             <div className="content-pane" ref={el => sectionRefs.current['Experience'] = el} id="Experience">
               <h2 className="content-title">Experience</h2>
-              {[
-                { role:'Operations Lead', org:'AI Club — VIT Chennai', period:'Mar 2024–Present', color:'var(--accent)', points:['Leading operations and managing project workflows','Coordinated a 24-hour offline hackathon as OC member'] },
-                { role:'Technical Team Member', org:'Game Dev Club — VIT Chennai', period:'Jul 2024–Jun 2025', color:'var(--accent-2)', points:['Improved reusable frontend components, reducing dev time by 40%','Organized and managed offline gaming events'] },
-              ].map((e,i) => (
-                <div key={i} className="exp-card" style={{'--ec':e.color}}>
+              {experienceRoles.map(e => (
+                <div key={e.id} className="exp-card" style={{'--ec':e.color}}>
                   <div className="exp-dot"/>
                   <div className="exp-body">
-                    <div className="exp-header"><span className="exp-role">{e.role}</span><span className="exp-period">{e.period}</span></div>
-                    <p className="exp-org">{e.org}</p>
-                    {e.points.map((p,j) => <p key={j} className="exp-point">▸ {p}</p>)}
+                    <div className="exp-header"><span className="exp-role">{e.title}</span><span className="exp-period">{e.period}</span></div>
+                    {e.progression && <p className="exp-org">{e.progression}</p>}
+                    <p className="exp-org">{e.organization} — {e.location}</p>
+                    {e.contributions.map(p => <p key={p} className="exp-point">▸ {p}</p>)}
                   </div>
                 </div>
               ))}
@@ -212,3 +209,7 @@ export default function AboutResume() {
     </div>
   )
 }
+
+
+
+
