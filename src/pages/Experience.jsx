@@ -2,10 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import AppWindow from '../components/AppWindow'
 
-const roles = [
-  { id: 'ai', icon: '✦', title: 'Operations Lead', organization: 'AI Club', location: 'VIT Chennai', period: 'Mar 2024 — Present', status: 'Current', summary: 'Bringing people, projects, and ideas together.', description: 'Leading operations and managing project workflows at the AI Club, with a focus on coordination and making technical events happen.', contributions: ['Leading operations and managing project workflows.', 'Coordinated a 24-hour offline hackathon as an organizing committee member.'], tags: ['Leadership', 'Project workflows', 'Event operations'] },
-  { id: 'game', icon: '⊞', title: 'Technical Team Member', organization: 'Game Dev Club', location: 'VIT Chennai', period: 'Jul 2024 — Jun 2025', status: 'Previous', summary: 'Building reusable interfaces and shared experiences.', description: 'Contributed to frontend development and helped organize gaming events as part of the Game Dev Club technical team.', contributions: ['Improved reusable frontend components, reducing development time by 40%.', 'Organized and managed offline gaming events.'], tags: ['Frontend development', 'Reusable components', 'Teamwork'] },
-]
+import { experienceRoles as roles } from '../data/experience'
 export default function Experience() {
   const [selected, setSelected] = useState('ai')
   const role = roles.find(r => r.id === selected)

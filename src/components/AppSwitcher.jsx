@@ -21,11 +21,27 @@ export default function AppSwitcher({children}) {
  const start=useRef(null),device=useRef(null),content=useRef(null)
  useLayoutEffect(()=>{
    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return
-   const animation=content.current?.animate([
-     {opacity:.4},
-     {opacity:1}
-   ],{duration:180,easing:'cubic-bezier(.22,1,.36,1)'})
-   return()=>animation?.cancel()
+   const screen=content.current
+   if(!screen)return
+   const isLock=location.pathname==='/'
+   const isHome=location.pathname==='/home'
+   if(isLock||isHome){
+     // Animate a few foreground groups; wallpaper and system chrome stay still.
+     const selector=isLock
+       ? '.lock-date, .lock-time, .lock-identity, .lock-mini-widgets, .lock-notifs'
+       : '.home-heading, .home-widgets, .app-grid, .dock'
+     const animations=[...screen.querySelectorAll(selector)].map((element,index)=>
+       element.animate([
+         {opacity:0,transform:`translateY(${isLock?-7:7}px)`},
+         {opacity:1,transform:'translateY(0)'}
+       ],{duration:240,delay:index*20,easing:'cubic-bezier(.22,1,.36,1)',fill:'backwards'})
+     )
+     return()=>animations.forEach(animation=>animation.cancel())
+   }
+   const animation=screen.animate([{opacity:.4},{opacity:1}],{
+     duration:180,easing:'cubic-bezier(.22,1,.36,1)'
+   })
+   return()=>animation.cancel()
  },[location.pathname])
  const path=location.pathname+location.search,locked=location.pathname==='/'
  if(seen!==path){setSeen(path);if(apps.some(a=>a.path===path))setRecents(r=>[path,...r.filter(p=>p!==path)].slice(0,8))}
@@ -43,6 +59,7 @@ export default function AppSwitcher({children}) {
  {panel==='Recent Apps'&&<Panel name={panel} onClose={()=>setPanel(null)} className="recents-panel"><p className="recents-hint">Pick up where you left off.</p><div className="recent-grid">{recents.map(p=>{const app=apps.find(a=>a.path===p);return <article className="recent-app" key={p}><div className="recent-title"><span style={{background:app.color}}>{app.icon}</span><strong>{app.label}</strong><button aria-label={`Close ${app.label} recent app`} onClick={()=>setRecents(r=>r.filter(x=>x!==p))}>×</button></div><button className={`recent-preview ${p==='/home'?'recent-home':''}`} onClick={()=>go(p)} aria-label={`Resume ${app.label}`}>{p==='/skills'?<div className="recent-specific recent-skills"><span>ϟ</span><h3>My developer toolbox</h3><p>Languages · Web · AI · Blockchain</p><div><b>React.js</b><b>Python</b><b>Solidity</b><b>Node.js</b></div></div>:p==='/experience'?<div className="recent-specific recent-experience"><span>▣</span><h3>Learning by doing</h3><p>AI Club · VIT Chennai</p><strong>Operations Lead</strong><small>Mar 2024 — Present</small></div>:p==='/contact'?<div className="recent-specific recent-contact"><span>✉</span><h3>Say hello.</h3><p>Ayush Agrawal</p><strong>New message</strong><small>Your draft stays with you.</small></div>:p==='/projects'?<><div className="mini-toolbar">Projects <span>All projects</span></div><div className="mini-projects">{projects.slice(0,4).map(p=><img src={p.image} alt="" key={p.id}/>)}</div></>:p==='/home'?<><img className="mini-avatar" src="/animated_ayush.png" alt=""/><h3>Hey, I’m Ayush.</h3><div className="mini-icons">{apps.map(a=><span key={a.path} style={{background:a.color}}>{a.icon}</span>)}</div></>:<><img className="mini-avatar" src="/animated_ayush.png" alt=""/><h3>{app.label==='About Me'?'Ayush Agrawal':app.label}</h3><p>Software Engineer · VIT Chennai</p><div className="mini-stats"><b>9.20<small>CGPA</small></b><b>300+<small>LeetCode</small></b></div></>}</button></article>})}</div>{!recents.length&&<p className="os-empty">No recent apps. Open an app from the Home Screen to get started.</p>}<button className="recent-home-button" onClick={()=>go('/home')}>⌂ Home Screen</button></Panel>}
  </div></div><div className="device-caption"><span>AYUSH AGRAWAL <i>✦</i> A PORTFOLIO, REIMAGINED.</span><span>Tap to explore. Swipe to switch. Make yourself at home.</span></div></div>
 }
+
 
 
 
