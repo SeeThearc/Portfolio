@@ -133,3 +133,24 @@ button:active:not(:disabled), [role="button"]:active { opacity:.82; }
 .theme-close .navigation-icon { width:16px; height:16px; }
 .home-widget { display:block; }
 .home-root .profile-widget { display:flex; }
+
+/* Click feedback stays inside its control and does not move surrounding content. */
+.click-feedback-overlay {
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:5;
+}
+.click-feedback-pulse {
+  position:absolute;
+  display:block;
+  border-radius:50%;
+  background:currentColor;
+  pointer-events:none;
+  opacity:0;
+}
+@media (prefers-reduced-motion:reduce) {
+  .click-feedback-overlay { display:none; }
+}
