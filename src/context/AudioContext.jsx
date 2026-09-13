@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createReadingMusic } from './readingMusic'
 const SoundContext = createContext(null)
 export function AudioProvider({ children }) {
   const [isMuted, setIsMuted] = useState(true)
@@ -15,23 +16,23 @@ export function AudioProvider({ children }) {
         const AudioEngine = window.AudioContext || window.webkitAudioContext
         if (!AudioEngine) return
         const ctx = new AudioEngine()
+        await ctx.resume()
         engine.current = ctx
         gain.current = ctx.createGain()
         gain.current.gain.value = 0
         gain.current.connect(ctx.destination)
-        ;[130.81, 196, 261.63, 329.63].forEach((frequency, i) => {
-          const oscillator = ctx.createOscillator()
-          oscillator.type = 'sine'
-          oscillator.frequency.value = frequency
-          oscillator.detune.value = i % 2 ? 3 : -3
-          oscillator.connect(gain.current)
-          oscillator.start()
-        })
+        const buffer = await createReadingMusic(ctx)
+        if (ctx.state === 'closed') return
+        const source = ctx.createBufferSource()
+        source.buffer = buffer
+        source.loop = true
+        source.connect(gain.current)
+        source.start()
       }
       const ctx = engine.current
       if (isMuted) {
         await ctx.resume()
-        gain.current.gain.setTargetAtTime(.025, ctx.currentTime, .06)
+        gain.current.gain.setTargetAtTime(.22, ctx.currentTime, .3)
         setIsMuted(false)
       } else {
         gain.current.gain.setTargetAtTime(0, ctx.currentTime, .045)
@@ -40,6 +41,8 @@ export function AudioProvider({ children }) {
         if (ctx.state !== 'closed') await ctx.suspend()
       }
     } catch {
+      engine.current?.close().catch(() => {})
+      engine.current = null
       setIsMuted(true)
     } finally {
       busy.current = false
