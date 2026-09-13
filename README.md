@@ -28,3 +28,11 @@ Appearance is saved locally; recent apps are session-scoped. Both work without b
 The prior studio redesign is retained in `src/studio/` but is not imported by the app.
 
 Serve `index.html` for application routes (`/home`, `/projects`, `/about`) when hosting. Email composition opens the visitor's mail app; clipboard copying requires HTTPS or localhost.
+
+## Dedicated portfolio apps
+
+- `/skills`: searchable skill categories, with links to projects demonstrating the tools.
+- `/experience`: an interactive role selector, contributions, education link, and resume download.
+- `/contact`: a dedicated contact card and message composer. Drafts stay in session storage when switching apps or reloading. Visitors review and send in their mail app or Gmail; the portfolio itself does not send email. Copy actions report success or offer manual selection when clipboard access is denied.
+
+All three apps are available from the Home Screen, Spotlight, and Recent Apps. Legacy `/about?tab=Skills` and `/about?tab=Experience` links redirect to the dedicated apps. Include the new application routes in your host's SPA fallback.

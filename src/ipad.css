@@ -40,3 +40,96 @@
 .device-caption {
   display: none;
 }
+
+/* Keep motion consistent across apps, without delaying click handling. */
+:root { --interaction-ease: cubic-bezier(.22, 1, .36, 1); }
+button, a, [role="button"] {
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease,
+    opacity 180ms ease, box-shadow 220ms ease, scale 180ms var(--interaction-ease);
+}
+button:active:not(:disabled), a:active, [role="button"]:active { scale: .97; }
+input, textarea { transition: border-color 180ms ease, box-shadow 180ms ease; }
+.os-content { transform-origin: center 65%; }
+.os-content .anim-slidein,
+.home-root .anim-fadeup,
+.home-root .app-item { animation: none; }
+.home-root .app-item, .home-root .dock-item {
+  transition: transform 260ms var(--interaction-ease), scale 180ms var(--interaction-ease);
+}
+.home-root .app-pressed { transform: scale(.95) !important; }
+.home-widget, .gallery-card, .theme-option, .recent-preview, .recent-title button {
+  transition: transform 280ms var(--interaction-ease), background-color 180ms ease,
+    border-color 180ms ease, box-shadow 280ms ease, scale 180ms var(--interaction-ease);
+}
+.os-music-toggle {
+  position: absolute;
+  top: 35px;
+  right: 24px;
+  z-index: 170;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 87px;
+  height: 29px;
+  padding: 0 10px;
+  border: 1px solid #ffffff25;
+  border-radius: 11px;
+  background: #25385bc9;
+  backdrop-filter: blur(18px);
+  color: #dce6fa;
+  font-size: 10px;
+  box-shadow: 0 3px 12px #08152e18;
+}
+.os-music-toggle:hover { background: #486287e6; border-color: #ffffff48; }
+.os-music-toggle.music-playing { color: #c4f0df; background: #284f4de6; border-color: #a2dcc54a; }
+.os-music-toggle:disabled { opacity: .8; }
+/* Reserve a strip for the music control above app toolbars. */
+.app-is-open .gallery-app, .app-is-open .about-app,
+.app-is-open .portfolio-window { top: 73px !important; }
+@media (max-width:700px) {
+  .os-music-toggle { right:16px; top:34px; height:28px; min-width:82px; font-size:9px; }
+  .app-is-open .gallery-app, .app-is-open .about-app,
+  .app-is-open .portfolio-window { top:70px !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  button:active:not(:disabled), a:active, [role="button"]:active { scale:1; }
+}
+
+/* Fixed geometry prevents font-baseline offsets and hover feedback loops. */
+.portfolio-back, .about-back-btn, .toolbar-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  padding: 0;
+  line-height: 1;
+  border-radius: 10px;
+  color: var(--accent);
+  background: #ffffff08;
+}
+.navigation-icon { display:block; width:20px; height:20px; flex:none; }
+.os-panel-heading > button { padding:0; line-height:1; }
+.os-panel-heading .navigation-icon { width:17px; height:17px; }
+button:active:not(:disabled), a:active, [role="button"]:active { scale:1; }
+.home-root .app-item:hover, .home-root .app-item:active,
+.home-root .dock-item:hover, .home-root .dock-item:active,
+.home-widget:hover, .lock-notif:hover, .theme-option:hover,
+.recent-preview:hover, .skill-evidence:hover, .skill-chip:hover {
+  transform:none;
+}
+button:active:not(:disabled), [role="button"]:active { opacity:.82; }
+.gallery-card { transform:none; animation:fadeIn 180ms ease both; }
+.gallery-card:hover .card-image { transform:none; }
+.gallery-card .card-glare { background:linear-gradient(135deg,#ffffff0b,transparent 60%); }
+.gallery-card:hover .card-glare { opacity:1; }
+.os-panel, .role-detail, .theme-panel, .modal-card { animation:fadeIn 180ms ease both; }
+.lock-exit { transform:none; }
+.portfolio-scroll, .gallery-grid, .about-content, .app-grid-wrapper { overscroll-behavior:contain; }
+.appearance-dialog { position:fixed; margin:auto; color:var(--text-primary); }
+.appearance-dialog::backdrop { background:#08132866; backdrop-filter:blur(12px); }
+.theme-close .navigation-icon { width:16px; height:16px; }
+.home-widget { display:block; }
+.home-root .profile-widget { display:flex; }

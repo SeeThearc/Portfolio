@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import NavigationIcon from '../components/NavigationIcon'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import './ProjectGallery.css'
 
@@ -16,55 +17,11 @@ const SIDEBAR_ACCOUNT = [
   { label: 'Featured', icon: '⭐', id: 'featured' },
 ]
 
-/* ── Tilt + Glare Card ────────────────────────────── */
-function ProjectCard({ proj, onOpen, index }) {
-  const cardRef = useRef(null)
-  const glareRef = useRef(null)
-  const rafRef = useRef(null)
-
-  const handleMouseMove = useCallback((e) => {
-    if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => {
-      const card = cardRef.current
-      if (!card) return
-      const rect = card.getBoundingClientRect()
-      const cx = rect.left + rect.width / 2
-      const cy = rect.top + rect.height / 2
-      const dx = (e.clientX - cx) / (rect.width / 2)   // -1 to 1
-      const dy = (e.clientY - cy) / (rect.height / 2)  // -1 to 1
-
-      // 3D tilt — max 12deg
-      const rotX = -dy * 12
-      const rotY = dx * 12
-
-      card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale3d(1.04, 1.04, 1.04)`
-
-      // Glare position — follows cursor
-      if (glareRef.current) {
-        const gx = (dx + 1) / 2 * 100   // 0–100%
-        const gy = (dy + 1) / 2 * 100
-        glareRef.current.style.background = `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.18) 0%, transparent 65%)`
-        glareRef.current.style.opacity = '1'
-      }
-    })
-  }, [])
-
-  const handleMouseLeave = useCallback(() => {
-    if (rafRef.current) cancelAnimationFrame(rafRef.current)
-    const card = cardRef.current
-    if (!card) return
-    card.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)'
-    if (glareRef.current) glareRef.current.style.opacity = '0'
-  }, [])
-
+/* ── Project Card ────────────────────────────── */
+function ProjectCard({ proj, onOpen }) {
   return (
     <div
-      ref={cardRef}
       className="gallery-card" role="button" tabIndex={0} aria-label={`Open ${proj.title}`} onKeyDown={e=>{if(e.target===e.currentTarget&&(e.key==="Enter"||e.key===" ")){e.preventDefault();onOpen(proj)}}}
-      style={{ animationDelay: `${index * 0.07 + 0.1}s` }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       onClick={() => onOpen(proj)}
     >
       {/* Full-bleed image */}
@@ -82,7 +39,7 @@ function ProjectCard({ proj, onOpen, index }) {
       <div className="card-overlay" />
 
       {/* Glare layer */}
-      <div ref={glareRef} className="card-glare" />
+      <div className="card-glare" />
 
       {/* Frosted glass info panel */}
       <div className="card-glass">
@@ -315,11 +272,7 @@ export default function ProjectGallery() {
         <main className="gallery-main">
           <div className="gallery-toolbar">
             <div className="gallery-toolbar-left">
-              <button className="toolbar-back" onClick={() => navigate('/home')}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                  <path d="M19 12H5M5 12l7 7M5 12l7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
+              <button className="toolbar-back" aria-label="Back to Home Screen" onClick={() => navigate('/home')}><NavigationIcon /></button>
               <h1 className="gallery-title">Gallery</h1>
             </div>
             <input className="os-project-search" aria-label="Search projects" placeholder="Search projects…" value={query} onChange={e=>setSearchParams(e.target.value?{q:e.target.value}:{},{replace:true})}/><div className="gallery-toolbar-quote">
@@ -329,11 +282,10 @@ export default function ProjectGallery() {
 
           {/* Project grid */}
           <div className="gallery-grid" key={activeFilter}>{displayedProjects.length===0&&<p className="gallery-empty">No projects found. Try another search or category.</p>}
-            {displayedProjects.map((proj, i) => (
+            {displayedProjects.map((proj) => (
               <ProjectCard
                 key={proj.id}
                 proj={proj}
-                index={i}
                 onOpen={setOpenProject}
               />
             ))}
@@ -348,6 +300,8 @@ export default function ProjectGallery() {
     </div>
   )
 }
+
+
 
 
 
